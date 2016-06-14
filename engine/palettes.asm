@@ -320,9 +320,13 @@ DeterminePaletteIDBack:
 	ld a, [hl]
 	ld [wd11e], a
 	and a
-	ld a, PAL_HERO
+	jp nz, GetMonPalID
+	ld a, [wBattleType]
+	cp BATTLE_TYPE_PIKACHU
+	ld a, PAL_OAKB
 	ret z
-	jp GetMonPalID
+	ld a, PAL_HERO
+	ret
 
 
 YellowIntroPaletteAction::

@@ -234,7 +234,7 @@ const_value = 0
 	const PAL_BLACKBELT     ; $D6
 	const PAL_GARY1         ; $D7
 	const PAL_OAK           ; $D8
-	const PAL_CHIEF         ; $D9
+	const PAL_OAKB          ; $D9
 	const PAL_SCIENTIST     ; $DA
 	const PAL_GIOVANNI      ; $DB
 	const PAL_ROCKET        ; $DC

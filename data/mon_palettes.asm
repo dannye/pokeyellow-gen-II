@@ -179,7 +179,7 @@ TrainerPalettes:
 	db PAL_BLACKBELT
 	db PAL_GARY1
 	db PAL_OAK
-	db PAL_CHIEF
+	db PAL_OAKB
 	db PAL_SCIENTIST
 	db PAL_GIOVANNI
 	db PAL_ROCKET
