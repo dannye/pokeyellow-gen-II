@@ -167,6 +167,8 @@ BillsPCMenu:
 	ld a, 1
 	ld [H_AUTOBGTRANSFERENABLED], a
 	call Delay3
+	ld b, SET_PAL_OVERWORLD
+	call RunPaletteCommand
 	call HandleMenuInput
 	bit 1, a
 	jp nz, ExitBillsPC ; b button

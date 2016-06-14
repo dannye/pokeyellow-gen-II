@@ -424,6 +424,7 @@ DisplayChangeBoxMenu:
 	coord hl, 0, 0
 	lb bc, 2, 9
 	call TextBoxBorder
+	call SendPokeballPal
 	ld hl, ChooseABoxText
 	call PrintText
 	coord hl, 11, 0

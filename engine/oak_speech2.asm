@@ -19,6 +19,7 @@ ChoosePlayerName:
 	cp "@"
 	jr z, .customName
 	call ClearScreen
+	callba SendPlayerPal
 	call Delay3
 	ld de, RedPicFront
 	ld b, BANK(RedPicFront)
@@ -52,6 +53,7 @@ ChooseRivalName:
 	cp "@"
 	jr z, .customName
 	call ClearScreen
+	callba SendRivalPal
 	call Delay3
 	ld de, Rival1Pic
 	ld b, $13

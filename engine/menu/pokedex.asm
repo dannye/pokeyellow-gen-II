@@ -14,8 +14,7 @@ ShowPokedexMenu:
 .setUpGraphics
 	callab LoadPokedexTilePatterns
 .loop
-	ld b, SET_PAL_GENERIC
-	call RunPaletteCommand
+	callba SendPokeballPal
 .doPokemonListMenu
 	ld hl, wTopMenuItemY
 	ld a, 3

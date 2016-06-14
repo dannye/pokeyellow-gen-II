@@ -966,7 +966,13 @@ wLowHealthAlarmDisabled:: ; ccf6
 wPlayerMonMinimized:: ; ccf7
 	ds 1
 
-	ds 13
+	ds 2
+
+wEXPBarPixelLength::  ds 1
+wEXPBarBaseEXP::      ds 3
+wEXPBarCurEXP::       ds 3
+wEXPBarNeededEXP::    ds 3
+wEXPBarKeepFullFlag:: ds 1
 
 wLuckySlotHiddenObjectIndex:: ; cd05
 
@@ -2341,6 +2347,8 @@ wMonHGrowthRate:: ; d0ca
 wMonHLearnset:: ; d0cb
 ; bit field
 	flag_array 50 + 5
+
+wMonHPicBank:: ; d0d3
 	ds 1
 
 wSavedTilesetType:: ; d0d3

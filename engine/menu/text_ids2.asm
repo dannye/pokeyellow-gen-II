@@ -246,7 +246,7 @@ JapaneseMainMenuText:
 
 BattleMenuText:
 	db   "FIGHT ",$E1,$E2
-	next "ITEM  RUN@"
+	next "PACK  RUN@"
 
 SafariZoneBattleMenuText:
 	db   "BALL×       BAIT"
