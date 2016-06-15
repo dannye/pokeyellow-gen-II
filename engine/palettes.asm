@@ -204,10 +204,13 @@ SetPal_PokemonWholeScreen:
 	call CopyData
 	pop bc
 	ld a, c
-	and a
+	cp 1
 	ld a, PAL_BLACK
-	jr nz, .next
+	jr z, .next
+	ld a, c
+	cp 2
 	ld a, [wWholeScreenPaletteMonSpecies]
+	jr z, .next
 	call DeterminePaletteIDOutOfBattle
 .next
 	ld [wPalPacket + 1], a
@@ -1160,12 +1163,7 @@ SendRivalPal:
 	jr SendCustomPacket
 
 SendCustomPacket:
-	push af
-	ld hl, PalPacket_Empty
-	ld bc, $0010
-	ld de, wPalPacket
-	call CopyData
-	pop af
-	ld hl, wPalPacket + 1
-	ld [hld], a
-	jp SendSGBPacket
+	ld [wWholeScreenPaletteMonSpecies], a
+	ld c, 2
+	ld b, SET_PAL_POKEMON_WHOLE_SCREEN
+	jp RunPaletteCommand
