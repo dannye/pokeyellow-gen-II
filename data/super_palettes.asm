@@ -1303,8 +1303,8 @@ SuperPalettes:
 
 	; PAL_OAKB
 	RGB 31, 31, 31
-	RGB 25, 20, 18
-	RGB 16, 13, 13
+	RGB 26, 23, 22
+	RGB 17, 16, 16
 	RGB 00, 00, 00
 
 	; PAL_SCIENTIST
@@ -2698,8 +2698,8 @@ GBCBasePalettes:
 
 	; PAL_OAKB
 	RGB 31, 31, 31
-	RGB 25, 20, 18
-	RGB 16, 13, 13
+	RGB 26, 23, 22
+	RGB 17, 16, 16
 	RGB 00, 00, 00
 
 	; PAL_SCIENTIST
