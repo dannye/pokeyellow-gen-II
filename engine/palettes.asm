@@ -805,6 +805,12 @@ index = 0
 index = index + 1
 	ENDR
 
+	ld a, PAL_EXP
+	call GetGBCBasePalAddress
+	xor a
+	call DMGPalToGBCPal
+	ld a, 4
+	call TransferCurBGPData
 	ret
 
 GetGBCBasePalAddress::
@@ -946,7 +952,7 @@ TransferBGPPals::
 	ld [rBGPI], a
 	ld de, rBGPD
 	ld hl, wBGPPalsBuffer
-	ld c, 4 * PAL_SIZE
+	ld c, 5 * PAL_SIZE
 .loop
 	ld a, [hli]
 	ld [de], a
@@ -1025,6 +1031,13 @@ index = 0
 index = index + 1
 	ENDR
 
+	ld a, PAL_EXP
+	call GetGBCBasePalAddress
+	xor a
+	call DMGPalToGBCPal
+	ld a, 4
+	call BufferBGPPal
+
 	call TransferBGPPals
 	ret
 
@@ -1086,6 +1099,11 @@ TranslatePalPacketToBGMapAttributes::
 	jr nz, .loop
 	ret
 .foundMatchingPointer
+	ld a, c
+	cp 11
+	jr nz, .notBattle
+	ld c, 14
+.notBattle
 	callba LoadBGMapAttributes
 	ret
 

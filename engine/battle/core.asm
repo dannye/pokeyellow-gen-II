@@ -1279,6 +1279,14 @@ HandlePlayerBlackOut:
 .notSony1Battle
 	ld b, SET_PAL_BATTLE_BLACK
 	call RunPaletteCommand
+
+	ld a, [hGBC]
+	and a
+	jr z, .notGBC
+	ld c, 11
+	callba LoadBGMapAttributes
+.notGBC
+
 	ld hl, PlayerBlackedOutText2
 	ld a, [wLinkState]
 	cp LINK_STATE_BATTLING
