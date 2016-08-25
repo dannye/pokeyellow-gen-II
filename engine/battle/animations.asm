@@ -3105,7 +3105,7 @@ AnimationShakeEnemyHUD:
 	ld a, [hGBC]
 	and a
 	jr z, .notGBC2
-	ld c, 11
+	ld c, 14
 	callba LoadBGMapAttributes
 .notGBC2
 	xor a
