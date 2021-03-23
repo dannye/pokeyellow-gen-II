@@ -68,9 +68,18 @@ more fair to all of the pokemon in gen1 and give each of them a viable play styl
 
 Additionally, the difficulty of opponents will be increased to make playthroughs more interesting. 
 
-Current goals for the Redux:
+Current must-have goals for the Redux:
+* Remove all trade requirements for evolution (replace with level evolutions)
+* Ensure that you can truly catch em all
+* Introduce the modern types to the game engine (dark, steel, fairy)
+* Fix known bugs in the game that significantly affect game play (psychic immune to ghost, focus energy bug)
+* Bring all evolution tree additions from gen 2 into the game (Note: this is not a guarantee to bring all gen 2 pokemon into the game) 
+    - Tyrouge and Hitmontop may be potential exceptions due to the unique evolution function thats non-existent in gen 1
+    - Also, some evolution methods will have to be modified (sunstone, trade with items, kings rock)
+    - This includes some potentially weird rules for espeon and umbreon, but we can cross that bridge when we get there 
 
-* Retyping of classic pokemon (Gen 1 types only), especially those with terrible defensive typing
+Current ideas for a fresh experience:
+* Retyping of classic pokemon, especially those with terrible defensive typing
 * Respec stats, try to create greater parity between all pokemon
     * Boost the stats of "early game" pokemon
     * Boost the stats of pokemon without evolutions
@@ -86,7 +95,6 @@ Current goals for the Redux:
 * Reassign the wild pokemon availble on routes
     * Create greater type-affinity to certain locations
     * Improve diversity in available pokemon at each location
-    * Ensure that you can truly catch em all
     * Make less pokemon constrained to end game locations to create greater options early on
 * Redesign the TM pool
     * This generation had a lot of TMs that were only learnable by a small number of pokes
@@ -94,13 +102,10 @@ Current goals for the Redux:
     * Bonus: Make a regional TM available at each city's shop
 * Make gym battles more demanding
     * You should feel like you earned that badge
+* Add additional areas/maps with new trainers
+    * I'm particularly interested with a post Elite-4 challenge
+* Introduce gen2 pokes (though likely not all of them) focusing on any additions to gen1 evolution trees, those that expand type groups that are very limited in gen 1, and those that help increase representation of the added types (like skarmory for steel, and some of the dark pokes)
 * Bonus: Mix up some of the in-game trades
-* Bonus: Remove all trade requirements for evolution
-* Considering: Make stone evolutions less necessary, but more interesting - i.e. less stat boosts 
-but greater change in typing and different moveset paths
-* Considering: Making fresh water available in cerulean/vermillion city to open up the game more 
-and allow a less linear approach to the gyms
-
-*I'm also considering implementing gendered pokes, with type and stat diferences between them to*
-*help mix things up, this depends on how stable the additional memory spaces are in the pokedex,*
-*i.e. putting missigno to work*
+* Considering: Make stone evolutions less necessary, but more interesting - i.e. less stat boosts but greater change in typing and different moveset paths
+* Considering: Making fresh water available in cerulean/vermillion city to open up the game more and allow a less linear approach to the gyms
+* Alternatively: Open up the entire map and SIGNIFICANTLY increase the difficulty of ALL gyms, while removing all gym requirements to exploration (except to reach victory road) allowing players to collect badges in any order
