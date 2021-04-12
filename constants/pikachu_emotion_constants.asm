@@ -1,29 +1,28 @@
-dpikapic: macro
+; pikachu happiness modifiers
+	const_def 1
+	const PIKAHAPPY_LEVELUP
+	const PIKAHAPPY_USEDITEM
+	const PIKAHAPPY_USEDXITEM
+	const PIKAHAPPY_GYMLEADER
+	const PIKAHAPPY_USEDTMHM
+	const PIKAHAPPY_WALKING
+	const PIKAHAPPY_DEPOSITED
+	const PIKAHAPPY_FAINTED
+	const PIKAHAPPY_PSNFNT
+	const PIKAHAPPY_CARELESSTRAINER
+	const PIKAHAPPY_TRADE
+
+dpikapic: MACRO
 	db (\1_id - PikaPicAnimPointers) / 2
-	endm
+ENDM
 
-ldpikapic: macro
-	ld \1, (\2_id - PikaPicAnimPointers) / 2
-	endm
-
-dpikaemotion: macro
+dpikaemotion: MACRO
 	db (\1_id - PikachuEmotionTable) / 2
-	endm
+ENDM
 
-ldpikaemotion: macro
+ldpikaemotion: MACRO
 	ld \1, (\2_id - PikachuEmotionTable) / 2
-	endm
-
-dpikaanim: macro
-	db (\1_id - PikaPicAnimBGFramesPointers) / 2
-	endm
-
-pikaframeend EQUS "db $e0"
-pikaframe: macro
-	db (\1_id - PikaPicTilemapPointers) / 2, \2
-	endm
-
-pikaframedelay EQUS "db 0,"
+ENDM
 
 ; Starter Pikachu emotion commands constants
 
@@ -60,7 +59,7 @@ pikaframedelay EQUS "db 0,"
 	const PIKASTEPDIR_UP_RIGHT
 
 
-; Macros for commands
+; MACROs for commands
 pikaemotion_dummy1: MACRO
 	db PIKAEMOTION_DUMMY1
 ENDM
@@ -117,108 +116,114 @@ pikaemotion_dummy3: MACRO
 ENDM
 
 pikacry_def: MACRO
-\1_id:: dba \1
-endm
+\1_id::
+	dba \1
+ENDM
 
 dpikacry: MACRO
 	db (\1_id - PikachuCriesPointerTable) / 3
-	endm
+ENDM
 
 ldpikacry: MACRO
 	ld \1, (\2_id - PikachuCriesPointerTable) / 3
-	ENDM
+ENDM
 
 pikacry: MACRO
 	ldpikacry a, \1
-	endm
+ENDM
 
 
-	enum_start
-	enum pikapic_nop_command
-pikapic_nop: macro
+	const_def
+	const pikapic_nop_command
+pikapic_nop: MACRO
 	db pikapic_nop_command
-	endm
+ENDM
 
-	enum pikapic_writebyte_command
-pikapic_writebyte: macro
-	db pikapic_writebyte_command, \1
-	endm
+	const pikapic_writebyte_command
+pikapic_writebyte: MACRO
+	db pikapic_writebyte_command
+	db \1
+ENDM
 
-	enum pikapic_loadgfx_command
-pikapic_loadgfx: macro
-	db pikapic_loadgfx_command, (\1_id - PikaPicAnimGFXHeaders) / 4
-	endm
+	const pikapic_loadgfx_command
+pikapic_loadgfx: MACRO
+	db pikapic_loadgfx_command
+	db (\1_id - PikaPicAnimGFXHeaders) / 4
+ENDM
 
-	enum pikapic_animation_command
-pikapic_animation: macro
+	const pikapic_animation_command
+pikapic_animation: MACRO
 	; frameset pointer, starting vtile, y offset, x offset
 	db pikapic_animation_command
-	dpikaanim \1
+	db (\1_id - PikaPicAnimBGFramesPointers) / 2
 	db 0, \2, \3, \4
-	endm
+ENDM
 
-	enum pikapic_nop4_command
-pikapic_nop4: macro
+	const pikapic_nop4_command
+pikapic_nop4: MACRO
 	db pikapic_nop4_command
-	endm
+ENDM
 
-	enum pikapic_nop5_command
-pikapic_nop5: macro
+	const pikapic_nop5_command
+pikapic_nop5: MACRO
 	db pikapic_nop5_command
-	endm
+ENDM
 
-	enum pikapic_waitbgmapeleteobject_command
-pikapic_waitbgmapeleteobject: macro
-	db pikapic_waitbgmapeleteobject_command, \1
-	endm
+	const pikapic_waitbgmapeleteobject_command
+pikapic_waitbgmapeleteobject: MACRO
+	db pikapic_waitbgmapeleteobject_command
+	db \1
+ENDM
 
-	enum pikapic_nop7_command
-pikapic_nop7: macro
+	const pikapic_nop7_command
+pikapic_nop7: MACRO
 	db pikapic_nop7_command
-	endm
+ENDM
 
-	enum pikapic_nop8_command
-pikapic_nop8: macro
+	const pikapic_nop8_command
+pikapic_nop8: MACRO
 	db pikapic_nop8_command
-	endm
+ENDM
 
-	enum pikapic_jump_command
-pikapic_jump: macro ; 9
-	dbw pikapic_jump_command, \1
-	endm
+	const pikapic_jump_command
+pikapic_jump: MACRO ; 9
+	db pikapic_jump_command
+	dw \1
+ENDM
 
-	enum pikapic_setduration_command
-pikapic_setduration: macro ; a
-	dbw pikapic_setduration_command, \1
-	endm
+	const pikapic_setduration_command
+pikapic_setduration: MACRO ; a
+	db pikapic_setduration_command
+	dw \1
+ENDM
 
-	enum pikapic_cry_command
-pikapic_cry: macro ; b
+	const pikapic_cry_command
+pikapic_cry: MACRO ; b
 	db pikapic_cry_command
 IF _NARG == 0
 	db $ff
 else
 	dpikacry \1
 	endc
-	endm
+ENDM
 
-	enum pikapic_thunderbolt_command
-pikapic_thunderbolt: macro ; c
+	const pikapic_thunderbolt_command
+pikapic_thunderbolt: MACRO ; c
 	db pikapic_thunderbolt_command
-	endm
+ENDM
 
-	enum pikapic_waitbgmap_command
-pikapic_waitbgmap: macro ; d
+	const pikapic_waitbgmap_command
+pikapic_waitbgmap: MACRO ; d
 	db pikapic_waitbgmap_command
-	endm
+ENDM
 
-	enum pikapic_ret_command
-pikapic_ret: macro ; e
+	const pikapic_ret_command
+pikapic_ret: MACRO ; e
 	db pikapic_ret_command
-	endm
+ENDM
 
-pikapic_looptofinish: macro
+pikapic_looptofinish: MACRO
 .loop\@
 	pikapic_waitbgmap
 	pikapic_jump .loop\@
-	endm
+ENDM

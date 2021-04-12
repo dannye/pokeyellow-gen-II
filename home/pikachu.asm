@@ -2,7 +2,7 @@ Func_1510::
 	push hl
 	ld hl, wPikachuOverworldStateFlags
 	set 7, [hl]
-	ld hl, wPikachuSpriteImageIdx ; pikachu data?
+	ld hl, wSpritePikachuStateData1ImageIndex ; pikachu data?
 	ld [hl], $ff
 	pop hl
 	ret
@@ -25,7 +25,7 @@ DisablePikachuOverworldSpriteDrawing::
 	push hl
 	ld hl, wPikachuOverworldStateFlags
 	set 3, [hl]
-	ld hl, wPikachuSpriteImageIdx ; pikachu data?
+	ld hl, wSpritePikachuStateData1ImageIndex ; pikachu data?
 	ld [hl], $ff
 	pop hl
 	ret
@@ -55,8 +55,8 @@ SpawnPikachu::
 	ld a, [hl]
 	dec a
 	swap a
-	ld [hTilePlayerStandingOn], a
-	homecall SpawnPikachu_ ; 3f:46d5
+	ldh [hTilePlayerStandingOn], a
+	homecall SpawnPikachu_
 	ret
 
 Pikachu_IsInArray::
@@ -83,7 +83,7 @@ Pikachu_IsInArray::
 GetPikachuMovementScriptByte::
 	push hl
 	push bc
-	ld a, [H_LOADEDROMBANK]
+	ldh a, [hLoadedROMBank]
 	push af
 	ld a, [wPikachuMovementScriptBank]
 	call BankswitchCommon
@@ -105,10 +105,12 @@ GetPikachuMovementScriptByte::
 	ret
 
 ApplyPikachuMovementData::
-	ld a, [H_LOADEDROMBANK]
+	ldh a, [hLoadedROMBank]
 	ld b, a
 	push af
-	callbs ApplyPikachuMovementData_
+	ld a, BANK(ApplyPikachuMovementData_)
+	call BankswitchCommon
+	call ApplyPikachuMovementData_
 	pop af
 	call BankswitchCommon
 	ret

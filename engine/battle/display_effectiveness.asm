@@ -1,7 +1,7 @@
 DisplayEffectiveness:
 	ld a, [wDamageMultipliers]
-	and a, $7F
-	cp a, $0A
+	and $7F
+	cp $0A
 	ret z
 	ld hl, SuperEffectiveText
 	jr nc, .done
@@ -10,9 +10,9 @@ DisplayEffectiveness:
 	jp PrintText
 
 SuperEffectiveText:
-	TX_FAR _SuperEffectiveText
-	db "@"
+	text_far _SuperEffectiveText
+	text_end
 
 NotVeryEffectiveText:
-	TX_FAR _NotVeryEffectiveText
-	db "@"
+	text_far _NotVeryEffectiveText
+	text_end

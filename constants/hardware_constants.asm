@@ -2,6 +2,19 @@
 
 GBC EQU $11
 
+; memory map
+VRAM_Begin  EQU $8000
+VRAM_End    EQU $a000
+SRAM_Begin  EQU $a000
+SRAM_End    EQU $c000
+WRAM0_Begin EQU $c000
+WRAM0_End   EQU $d000
+WRAM1_Begin EQU $d000
+WRAM1_End   EQU $e000
+; hardware registers $ff00-$ff80 (see below)
+HRAM_Begin  EQU $ff80
+HRAM_End    EQU $ffff
+
 ; MBC1
 MBC1SRamEnable      EQU $0000
 MBC1RomBank         EQU $2000
@@ -21,14 +34,6 @@ SERIAL   EQU 3
 JOYPAD   EQU 4
 
 LY_VBLANK EQU 145
-
-; OAM attribute flags
-OAM_PALETTE   EQU %111
-OAM_TILE_BANK EQU 3
-OAM_OBP_NUM   EQU 4 ; Non CGB Mode Only
-OAM_X_FLIP    EQU 5
-OAM_Y_FLIP    EQU 6
-OAM_PRIORITY  EQU 7 ; 0: OBJ above BG, 1: OBJ behind BG (colors 1-3)
 
 ; serial
 START_TRANSFER_EXTERNAL_CLOCK EQU $80
@@ -68,10 +73,26 @@ rNR34       EQU $ff1e ; Channel 3 Frequency's higher data (R/W)
 rNR41       EQU $ff20 ; Channel 4 Sound Length (R/W)
 rNR42       EQU $ff21 ; Channel 4 Volume Envelope (R/W)
 rNR43       EQU $ff22 ; Channel 4 Polynomial Counter (R/W)
-rNR44       EQU $ff23 ; Channel 4 Counter/consecutive; Inital (R/W)
+rNR44       EQU $ff23 ; Channel 4 Counter/consecutive; Initial (R/W)
 rNR50       EQU $ff24 ; Channel control / ON-OFF / Volume (R/W)
 rNR51       EQU $ff25 ; Selection of Sound output terminal (R/W)
 rNR52       EQU $ff26 ; Sound on/off
+rWave_0     EQU $ff30
+rWave_1     EQU $ff31
+rWave_2     EQU $ff32
+rWave_3     EQU $ff33
+rWave_4     EQU $ff34
+rWave_5     EQU $ff35
+rWave_6     EQU $ff36
+rWave_7     EQU $ff37
+rWave_8     EQU $ff38
+rWave_9     EQU $ff39
+rWave_a     EQU $ff3a
+rWave_b     EQU $ff3b
+rWave_c     EQU $ff3c
+rWave_d     EQU $ff3d
+rWave_e     EQU $ff3e
+rWave_f     EQU $ff3f
 rLCDC       EQU $ff40 ; LCD Control (R/W)
 rLCDC_ENABLE EQU 7
 rLCDC_ENABLE_MASK EQU 1 << rLCDC_ENABLE
