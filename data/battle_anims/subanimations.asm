@@ -94,7 +94,7 @@ SubanimationPointers:
 ;     db frame block id, base coordinate id, frame block mode
 ; endr
 
-subanim: MACRO
+MACRO subanim
 	db (\1 << 5) | \2
 ENDM
 

@@ -1,4 +1,4 @@
-move_choices: MACRO
+MACRO move_choices
 REPT _NARG
 	db \1
 	shift

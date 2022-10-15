@@ -1,4 +1,4 @@
-key_item_bits: MACRO
+MACRO key_item_bits
 _bit = 0
 _byte = 0
 REPT _NARG

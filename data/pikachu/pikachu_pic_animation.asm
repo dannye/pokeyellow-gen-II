@@ -326,7 +326,7 @@ PikaPicAnimScript28:
 	pikapic_cry
 	pikapic_looptofinish
 
-pikapicanimgfx: MACRO
+MACRO pikapicanimgfx
 IF _NARG == 2
 \2_id::
 	db \1  ; size (-1 if compressed)

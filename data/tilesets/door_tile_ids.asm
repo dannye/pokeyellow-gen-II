@@ -15,7 +15,7 @@ DoorTileIDPointers:
 	dbw INTERIOR,    .InteriorDoorTileIDs
 	db -1 ; end
 
-door_tiles: MACRO
+MACRO door_tiles
 REPT _NARG
 	db \1
 	shift

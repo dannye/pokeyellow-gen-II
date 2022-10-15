@@ -1,4 +1,4 @@
-coll_tiles: MACRO
+MACRO coll_tiles
 REPT _NARG
 	db \1
 	shift

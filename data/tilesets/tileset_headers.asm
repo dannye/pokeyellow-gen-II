@@ -1,4 +1,4 @@
-tileset: MACRO
+MACRO tileset
 	db BANK(\2)   ; BANK(GFX)
 	dw \1, \2, \3 ; Block, GFX, Coll
 	db \4, \5, \6 ; counter tiles

@@ -1,4 +1,4 @@
-def_objects: MACRO
+MACRO def_objects
 	IF DEF(_NUM_OBJECTS)
 		PURGE _NUM_OBJECTS
 	ENDC
@@ -16,7 +16,7 @@ ENDM
 ;\7 items only: item id
 ;\7 trainers only: trainer class/pokemon id
 ;\8 trainers only: trainer number/pokemon level
-object: MACRO
+MACRO object
 	db \1
 	db \3 + 4
 	db \2 + 4
@@ -35,7 +35,7 @@ object: MACRO
 _NUM_OBJECTS = _NUM_OBJECTS + 1
 ENDM
 
-def_warps: MACRO
+MACRO def_warps
 	IF DEF(_NUM_WARPS)
 		PURGE _NUM_WARPS
 	ENDC
@@ -48,7 +48,7 @@ ENDM
 ;\2 y position
 ;\3 destination warp id
 ;\4 destination map (-1 = wLastMap)
-warp: MACRO
+MACRO warp
 	db \2, \1, \3, \4
 _TMP EQUS "\n_WARP_{d:{_NUM_WARPS}}_X = \1\n_WARP_{d:{_NUM_WARPS}}_Y = \2"
 	_TMP
@@ -56,7 +56,7 @@ _TMP EQUS "\n_WARP_{d:{_NUM_WARPS}}_X = \1\n_WARP_{d:{_NUM_WARPS}}_Y = \2"
 _NUM_WARPS = _NUM_WARPS + 1
 ENDM
 
-def_signs: MACRO
+MACRO def_signs
 	IF DEF(_NUM_SIGNS)
 		PURGE _NUM_SIGNS
 	ENDC
@@ -68,13 +68,13 @@ ENDM
 ;\1 x position
 ;\2 y position
 ;\3 sign id
-sign: MACRO
+MACRO sign
 	db \2, \1, \3
 _NUM_SIGNS = _NUM_SIGNS + 1
 ENDM
 
 ;\1 source map
-def_warps_to: MACRO
+MACRO def_warps_to
 N = 0
 	REPT _NUM_WARPS
 _TMP EQUS "warp_to _WARP_{d:N}_X, _WARP_{d:N}_Y, \1_WIDTH"
@@ -87,7 +87,7 @@ ENDM
 ;\1 x position
 ;\2 y position
 ;\3 map width
-warp_to: MACRO
+MACRO warp_to
 	event_displacement \3, \1, \2
 ENDM
 
@@ -97,7 +97,7 @@ ENDM
 ;\3 TextBeforeBattle
 ;\4 TextAfterBattle
 ;\5 TextEndBattle
-trainer: MACRO
+MACRO trainer
 	IF _NARG > 5
 		dbEventFlagBit \1, \2
 		db (\3 << 4)
@@ -114,7 +114,7 @@ ENDM
 ;\1 x position
 ;\2 y position
 ;\3 movement data
-map_coord_movement: MACRO
+MACRO map_coord_movement
 	dbmapcoord \1, \2
 	dw \3
 ENDM
@@ -124,7 +124,7 @@ ENDM
 ;\2 map id
 ;\3 tileset
 ;\4 connections: combo of NORTH, SOUTH, WEST, and/or EAST, or 0 for none
-map_header: MACRO
+MACRO map_header
 CURRENT_MAP_WIDTH = \2_WIDTH
 CURRENT_MAP_HEIGHT = \2_HEIGHT
 CURRENT_MAP_OBJECT EQUS "\1_Object"
@@ -138,7 +138,7 @@ CURRENT_MAP_OBJECT EQUS "\1_Object"
 ENDM
 
 ; Comes after map_header and connection macros
-end_map_header: MACRO
+MACRO end_map_header
 	dw CURRENT_MAP_OBJECT
 	PURGE CURRENT_MAP_WIDTH
 	PURGE CURRENT_MAP_HEIGHT
@@ -151,7 +151,7 @@ ENDM
 ;\3 map id
 ;\4 offset of the target map relative to the current map
 ;   (x offset for east/west, y offset for north/south)
-connection: MACRO
+MACRO connection
 
 ; Calculate tile offsets for source (current) and target maps
 _src = 0

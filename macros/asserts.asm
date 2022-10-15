@@ -1,6 +1,6 @@
 ; Macros to verify assumptions about the data or code
 
-table_width: MACRO
+MACRO table_width
 CURRENT_TABLE_WIDTH = \1
 IF DEF(CURRENT_TABLE_START)
 PURGE CURRENT_TABLE_START
@@ -13,13 +13,13 @@ CURRENT_TABLE_START:
 ENDC
 ENDM
 
-assert_table_length: MACRO
+MACRO assert_table_length
 x = \1
 	ASSERT x * CURRENT_TABLE_WIDTH == @ - CURRENT_TABLE_START, \
 		"{CURRENT_TABLE_START}: expected {d:x} entries, each {d:CURRENT_TABLE_WIDTH} bytes"
 ENDM
 
-list_start: MACRO
+MACRO list_start
 list_index = 0
 IF DEF(CURRENT_LIST_START)
 PURGE CURRENT_LIST_START
@@ -32,19 +32,19 @@ CURRENT_LIST_START:
 ENDC
 ENDM
 
-li: MACRO
+MACRO li
 	ASSERT !STRIN(\1, "@"), STRCAT("String terminator \"@\" in list entry: ", \1)
 	db \1, "@"
 list_index = list_index + 1
 ENDM
 
-assert_list_length: MACRO
+MACRO assert_list_length
 x = \1
 	ASSERT x == list_index, \
 		"{CURRENT_LIST_START}: expected {d:x} entries, got {d:list_index}"
 ENDM
 
-def_grass_wildmons: MACRO
+MACRO def_grass_wildmons
 ;\1: encounter rate
 if DEF(CURRENT_GRASS_WILDMONS_LABEL)
 PURGE CURRENT_GRASS_WILDMONS_LABEL
@@ -55,7 +55,7 @@ CURRENT_GRASS_WILDMONS_LABEL:
 	db \1
 ENDM
 
-end_grass_wildmons: MACRO
+MACRO end_grass_wildmons
 	IF CURRENT_GRASS_WILDMONS_RATE == 0
 		assert 1 == @ - CURRENT_GRASS_WILDMONS_LABEL, \
 			"def_grass_wildmons {d:CURRENT_GRASS_WILDMONS_RATE}: expected 1 byte"
@@ -65,7 +65,7 @@ end_grass_wildmons: MACRO
 	ENDC
 ENDM
 
-def_water_wildmons: MACRO
+MACRO def_water_wildmons
 ;\1: encounter rate
 if DEF(CURRENT_WATER_WILDMONS_LABEL)
 PURGE CURRENT_WATER_WILDMONS_LABEL
@@ -76,7 +76,7 @@ CURRENT_WATER_WILDMONS_LABEL:
 	db \1
 ENDM
 
-end_water_wildmons: MACRO
+MACRO end_water_wildmons
 	IF CURRENT_WATER_WILDMONS_RATE == 0
 		assert 1 == @ - CURRENT_WATER_WILDMONS_LABEL, \
 			"def_water_wildmons {d:CURRENT_WATER_WILDMONS_RATE}: expected 1 byte"

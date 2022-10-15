@@ -118,7 +118,7 @@ NUM_FLOORS EQU const_value - 1 - NUM_ITEMS
 ; match the actual number below.
 NUM_TMS EQU 50
 
-add_hm: MACRO
+MACRO add_hm
 ; Defines three constants:
 ; - HM_\1: the item id, starting at $C4
 ; - \1_TMNUM: the learnable TM/HM flag, starting at 51
@@ -149,7 +149,7 @@ ENDM
 	add_hm FLASH        ; $C8
 NUM_HMS EQU const_value - HM01
 
-add_tm: MACRO
+MACRO add_tm
 ; Defines three constants:
 ; - TM_\1: the item id, starting at $C9
 ; - \1_TMNUM: the learnable TM/HM flag, starting at 1
