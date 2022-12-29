@@ -39,7 +39,7 @@ CinnabarGymQuiz::
 	call PrintText
 	ld a, 1
 	ld [wDoNotWaitForButtonPressAfterDisplayingText], a
-	call CinnabarGymQuiz_1ea92
+	call CinnabarGymQuiz_AskQuestion
 	jp TextScriptEnd
 
 CinnabarGymQuizDummyIntroText:
@@ -86,7 +86,7 @@ CinnabarQuizQuestionsText6:
 	text_far _CinnabarQuizQuestionsText6
 	text_end
 
-CinnabarGymQuiz_1ea92:
+CinnabarGymQuiz_AskQuestion:
 	call YesNoChoice
 	ldh a, [hGymGateAnswer]
 	ld c, a
@@ -201,12 +201,12 @@ UpdateCinnabarGymGateTileBlocks_::
 	callfar RedrawMapView
 	ret
 
-gym_gate_coord: MACRO
+MACRO gym_gate_coord
 	db \1, \2, \3, 0
 ENDM
 
-HORIZONTAL_GATE_BLOCK EQU $54
-VERTICAL_GATE_BLOCK   EQU $5f
+DEF HORIZONTAL_GATE_BLOCK EQU $54
+DEF VERTICAL_GATE_BLOCK   EQU $5f
 
 CinnabarGymGateCoords:
 	; x coord, y coord, block id

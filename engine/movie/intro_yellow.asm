@@ -30,6 +30,7 @@ PlayIntroScene:
 	jr .loop
 
 .go_to_title_screen
+	vc_hook Stop_Reducing_intro_scene_flashing
 	call YellowIntro_BlankPalettes
 	xor a
 	ldh [hLCDCPointer], a
@@ -56,42 +57,42 @@ PlayIntroScene:
 	ret
 
 Func_f98a2:
-	ld a, [wOAMBuffer + 8 * 4 + 3]
+	ld a, [wShadowOAMSprite08Attributes]
 	or $1
-	ld [wOAMBuffer + 8 * 4 + 3], a
-	ld a, [wOAMBuffer + 14 * 4 + 3]
+	ld [wShadowOAMSprite08Attributes], a
+	ld a, [wShadowOAMSprite14Attributes]
 	or $1
-	ld [wOAMBuffer + 14 * 4 + 3], a
-	ld a, [wOAMBuffer + 16 * 4 + 3]
+	ld [wShadowOAMSprite14Attributes], a
+	ld a, [wShadowOAMSprite16Attributes]
 	or $1
-	ld [wOAMBuffer + 16 * 4 + 3], a
-	ld a, [wOAMBuffer + 18 * 4 + 3]
+	ld [wShadowOAMSprite16Attributes], a
+	ld a, [wShadowOAMSprite18Attributes]
 	or $1
-	ld [wOAMBuffer + 18 * 4 + 3], a
-	ld a, [wOAMBuffer + 19 * 4 + 3]
+	ld [wShadowOAMSprite18Attributes], a
+	ld a, [wShadowOAMSprite19Attributes]
 	or $1
-	ld [wOAMBuffer + 19 * 4 + 3], a
+	ld [wShadowOAMSprite19Attributes], a
 	ret
 
 Func_f98cb:
-	ld a, [wOAMBuffer + 18 * 4 + 3]
+	ld a, [wShadowOAMSprite18Attributes]
 	or $1
-	ld [wOAMBuffer + 18 * 4 + 3], a
-	ld a, [wOAMBuffer + 19 * 4 + 3]
+	ld [wShadowOAMSprite18Attributes], a
+	ld a, [wShadowOAMSprite19Attributes]
 	or $1
-	ld [wOAMBuffer + 19 * 4 + 3], a
-	ld a, [wOAMBuffer + 20 * 4 + 3]
+	ld [wShadowOAMSprite19Attributes], a
+	ld a, [wShadowOAMSprite20Attributes]
 	or $1
-	ld [wOAMBuffer + 20 * 4 + 3], a
-	ld a, [wOAMBuffer + 25 * 4 + 3]
+	ld [wShadowOAMSprite20Attributes], a
+	ld a, [wShadowOAMSprite25Attributes]
 	or $1
-	ld [wOAMBuffer + 25 * 4 + 3], a
-	ld a, [wOAMBuffer + 26 * 4 + 3]
+	ld [wShadowOAMSprite25Attributes], a
+	ld a, [wShadowOAMSprite26Attributes]
 	or $1
-	ld [wOAMBuffer + 26 * 4 + 3], a
-	ld a, [wOAMBuffer + 28 * 4 + 3]
+	ld [wShadowOAMSprite26Attributes], a
+	ld a, [wShadowOAMSprite28Attributes]
 	or $1
-	ld [wOAMBuffer + 28 * 4 + 3], a
+	ld [wShadowOAMSprite28Attributes], a
 	ret
 
 Func_f98fc:
@@ -123,6 +124,7 @@ Jumptable_f9906:
 YellowIntro_NextScene:
 	ld hl, wYellowIntroCurrentScene
 	inc [hl]
+	vc_hook Reduce_intro_scene_flashing_0E
 	ret
 
 YellowIntroScene0:
@@ -601,6 +603,7 @@ YellowIntroScene14:
 	call YellowIntro_SpawnAnimatedObjectAndSavePointer
 	call YellowIntro_NextScene
 	ld a, $28
+	vc_hook Reduce_intro_scene_flashing_0F
 	ld [wYellowIntroSceneTimer], a
 	ret
 
@@ -705,12 +708,14 @@ YellowIntro_CheckFrameTimerDecrement:
 	ret
 
 .asm_f9e4b
+	vc_hook Stop_reducing_intro_scene_flashing_0F
 	scf
 	ret
 
 YellowIntro_LoadDMGPalAndIncrementCounter:
 	ld hl, wYellowIntroSceneTimer
 	ld a, [hl]
+	vc_hook Stop_reducing_intro_scene_flashing_0E
 	inc [hl]
 	ld l, a
 	ld h, $0
@@ -906,8 +911,8 @@ Bank3E_FillMemory:
 	ret
 
 YellowIntro_BlankOAMBuffer:
-	ld hl, wOAMBuffer
-	ld bc, wOAMBufferEnd - wOAMBuffer
+	ld hl, wShadowOAM
+	ld bc, wShadowOAMEnd - wShadowOAM
 	xor a
 	call Bank3E_FillMemory
 	ret
@@ -1077,7 +1082,7 @@ Func_fa08e:
 	ret
 
 Unkn_fa0aa:
-	sine_wave $100
+	sine_table 32
 
 INCLUDE "data/sprite_anims/intro_frames.asm"
 INCLUDE "data/sprite_anims/intro_oam.asm"

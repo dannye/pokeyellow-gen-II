@@ -616,14 +616,14 @@ PrepareSuperNintendoVRAMTransfer:
 .packetPointers
 ; Only the first packet is needed.
 	dw MaskEnFreezePacket
-	dw DataSnd_728a1
-	dw DataSnd_728b1
-	dw DataSnd_728c1
-	dw DataSnd_728d1
-	dw DataSnd_728e1
-	dw DataSnd_728f1
-	dw DataSnd_72901
-	dw DataSnd_72911
+	dw DataSndPacket1
+	dw DataSndPacket2
+	dw DataSndPacket3
+	dw DataSndPacket4
+	dw DataSndPacket5
+	dw DataSndPacket6
+	dw DataSndPacket7
+	dw DataSndPacket8
 
 CheckSGB:
 ; Returns whether the game is running on an SGB in carry.
@@ -676,6 +676,7 @@ CheckSGB:
 SendMltReq1Packet:
 	ld hl, MltReq1Packet
 	call SendSGBPacket
+	vc_hook Unknown_network_reset
 	jp Wait7000
 
 CopyGfxToSuperNintendoVRAM:
@@ -766,9 +767,7 @@ InitGBCPalettes:
 
 	inc hl
 
-index = 0
-
-	REPT NUM_ACTIVE_PALS
+	FOR index, NUM_ACTIVE_PALS
 		IF index > 0
 			pop hl
 		ENDC
@@ -800,8 +799,6 @@ index = 0
 		call DMGPalToGBCPal
 		ld a, index + 4
 		call TransferCurOBPData
-
-index = index + 1
 	ENDR
 
 	ld a, PAL_EXP
@@ -852,8 +849,7 @@ DMGPalToGBCPal::
 	ldh a, [rOBP1]
 	ld [wLastOBP1], a
 .convert
-color_index = 0
-	REPT NUM_PAL_COLORS
+	FOR color_index, NUM_PAL_COLORS
 		ld b, a
 		and %11
 		call .GetColorAddress
@@ -870,8 +866,6 @@ color_index = 0
 			rrca
 			rrca
 		ENDC
-
-color_index = color_index + 1
 	ENDR
 	ret
 
@@ -1015,9 +1009,7 @@ _UpdateGBCPal_BGP_CheckDMG::
 ; fall through
 
 _UpdateGBCPal_BGP::
-index = 0
-
-	REPT NUM_ACTIVE_PALS
+	FOR index, NUM_ACTIVE_PALS
 		ld a, [wGBCBasePalPointers + index * 2]
 		ld e, a
 		ld a, [wGBCBasePalPointers + index * 2 + 1]
@@ -1026,8 +1018,6 @@ index = 0
 		call DMGPalToGBCPal
 		ld a, index
 		call BufferBGPPal
-
-index = index + 1
 	ENDR
 
 	ld a, PAL_EXP
@@ -1041,9 +1031,7 @@ index = index + 1
 	ret
 
 _UpdateGBCPal_OBP::
-index = 0
-
-	REPT NUM_ACTIVE_PALS
+	FOR index, NUM_ACTIVE_PALS
 		ld a, [wGBCBasePalPointers + index * 2]
 		ld e, a
 		ld a, [wGBCBasePalPointers + index * 2 + 1]
@@ -1064,8 +1052,6 @@ index = 0
 		ENDC
 
 		call TransferCurOBPData
-
-index = index + 1
 	ENDR
 
 	ret

@@ -1,6 +1,6 @@
 SuperPalettes:
-	table_width 2 * 4, SuperPalettes
 ; entries correspond to PAL_* constants
+	table_width 2 * 4, SuperPalettes
 	RGB 31,31,31, 22,25,19, 16,21,30, 00,00,00 ; PAL_ROUTE
 	RGB 31,31,31, 27,28,31, 15,20,31, 00,00,00 ; PAL_PALLET
 	RGB 31,31,31, 24,28,19, 15,20,31, 00,00,00 ; PAL_VIRIDIAN
@@ -243,6 +243,7 @@ SuperPalettes:
 	assert_table_length NUM_SGB_PALS
 
 GBCBasePalettes:
+; entries correspond to PAL_* constants
 	table_width 2 * 4, GBCBasePalettes
 	RGB 31,31,31, 16,31,04, 11,23,31, 03,03,03 ; PAL_ROUTE
 	RGB 31,31,31, 23,17,31, 11,23,31, 03,03,03 ; PAL_PALLET

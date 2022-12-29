@@ -3,7 +3,7 @@
 	const MOVE_GENGAR_RIGHT
 	const MOVE_GENGAR_LEFT
 
-ANIMATION_END EQU 80
+DEF ANIMATION_END EQU 80
 
 PlayIntro:
 	xor a
@@ -20,7 +20,7 @@ PlayIntro:
 	ret
 
 InitIntroNidorinoOAM:
-	ld hl, wOAMBuffer
+	ld hl, wShadowOAM
 	ld d, 0
 .loop
 	push bc

@@ -27,11 +27,10 @@ WarpTileIDPointers:
 	dw .BeachHouseWarpTileIDs
 	assert_table_length NUM_TILESETS
 
-warp_tiles: MACRO
-REPT _NARG
-	db \1
-	shift
-ENDR
+MACRO warp_tiles
+	IF _NARG
+		db \# ; all args
+	ENDC
 	db -1 ; end
 ENDM
 
@@ -93,7 +92,7 @@ ENDM
 	; fallthrough
 .ShipPortWarpTileIDs:
 .ClubWarpTileIDs:
-	warp_tiles
+	warp_tiles ; end
 
 .BeachHouseWarpTileIDs:
 	warp_tiles ; end

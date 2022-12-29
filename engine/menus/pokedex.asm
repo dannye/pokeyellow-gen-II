@@ -99,7 +99,7 @@ HandlePokedexSideMenu:
 	ldh [hJoy7], a
 .handleMenuInput
 	call HandleMenuInput
-	bit 1, a ; was the B button pressed?
+	bit BIT_B_BUTTON, a
 	ld b, 2
 	jr nz, .buttonBPressed
 	ld a, [wCurrentMenuItem]
@@ -110,7 +110,13 @@ HandlePokedexSideMenu:
 	dec a
 	jr z, .choseArea
 	dec a
+	vc_patch Forbid_printing_Pokedex
+IF DEF (_YELLOW_VC)
+	jr z, .handleMenuInput
+ELSE
 	jr z, .chosePrint
+ENDC
+	vc_patch_end
 .choseQuit
 	ld b, 1
 .exitSideMenu

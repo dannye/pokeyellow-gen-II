@@ -1,6 +1,3 @@
-INCLUDE "constants.asm"
-
-
 SECTION "Maps 1", ROMX
 
 INCLUDE "data/maps/headers/CeladonCity.asm"
@@ -1250,8 +1247,7 @@ INCLUDE "scripts/MtMoonPokecenter2.asm"
 
 INCLUDE "data/maps/headers/SummerBeachHouse.asm"
 INCLUDE "scripts/SummerBeachHouse.asm"
-SummerBeachHouse_Blocks:
-INCBIN "maps/SummerBeachHouse.blk"
+SummerBeachHouse_Blocks: INCBIN "maps/SummerBeachHouse.blk"
 INCLUDE "data/maps/objects/SummerBeachHouse.asm"
 INCLUDE "scripts/SummerBeachHouse2.asm"
 

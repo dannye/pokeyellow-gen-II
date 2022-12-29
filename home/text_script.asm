@@ -65,7 +65,7 @@ DisplayTextID::
 
 ; check first byte of text for special cases
 
-dict2: MACRO
+MACRO dict2
 	cp \1
 	jr nz, .not\@
 	\2
@@ -97,7 +97,7 @@ AfterDisplayingTextID::
 HoldTextDisplayOpen::
 	call Joypad
 	ldh a, [hJoyHeld]
-	bit 0, a ; is the A button being pressed?
+	bit BIT_A_BUTTON, a
 	jr nz, HoldTextDisplayOpen
 
 CloseTextDisplay::

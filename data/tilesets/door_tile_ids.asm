@@ -15,11 +15,10 @@ DoorTileIDPointers:
 	dbw INTERIOR,    .InteriorDoorTileIDs
 	db -1 ; end
 
-door_tiles: MACRO
-REPT _NARG
-	db \1
-	shift
-ENDR
+MACRO door_tiles
+	IF _NARG
+		db \# ; all args
+	ENDC
 	db 0 ; end
 ENDM
 

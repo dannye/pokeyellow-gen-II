@@ -30,7 +30,7 @@ SetupOwnPartyPokeballs:
 	ld [wHUDPokeballGfxOffsetX], a
 	xor a
 	ld [wdef5], a
-	ld hl, wOAMBuffer
+	ld hl, wShadowOAM
 	jp WritePokeballOAMData
 
 SetupEnemyPartyPokeballs:
@@ -46,7 +46,7 @@ SetupEnemyPartyPokeballs:
 	ld [wHUDPokeballGfxOffsetX], a
 	ld a, $1
 	ld [wdef5], a
-	ld hl, wOAMBuffer + PARTY_LENGTH * 4
+	ld hl, wShadowOAMSprite06
 	jp WritePokeballOAMData
 
 SetupPokeballs:
@@ -213,7 +213,7 @@ SetupPlayerAndEnemyPokeballs:
 	ld [wHUDPokeballGfxOffsetX], a
 	xor a
 	ld [wdef5], a
-	ld hl, wOAMBuffer
+	ld hl, wShadowOAM
 	call WritePokeballOAMData
 	ld hl, wEnemyMons
 	ld de, wEnemyPartyCount
@@ -224,7 +224,7 @@ SetupPlayerAndEnemyPokeballs:
 	ld [hl], $68
 	ld a, $1
 	ld [wdef5], a
-	ld hl, wOAMBuffer + $18
+	ld hl, wShadowOAMSprite06
 	jp WritePokeballOAMData
 
 ; four tiles: pokeball, black pokeball (status ailment), crossed out pokeball (fainted) and pokeball slot (no mon)

@@ -1,18 +1,18 @@
 SummerBeachHouse_Object:
 	db $a ; border block
 
-	def_warps
-	warp  2,  7, 0, LAST_MAP
-	warp  3,  7, 0, LAST_MAP
+	def_warp_events
+	warp_event  2,  7, LAST_MAP, 1
+	warp_event  3,  7, LAST_MAP, 1
 
-	def_signs
-	sign  3,  0, 3
-	sign  7,  0, 4
-	sign 11,  0, 5
-	sign 13,  1, 6
+	def_bg_events
+	bg_event  3,  0, 3 ; SummerBeachHouseSign1Text
+	bg_event  7,  0, 4 ; SummerBeachHouseSign2Text
+	bg_event 11,  0, 5 ; SummerBeachHouseSign3Text
+	bg_event 13,  1, 6 ; SummerBeachHouseSign4Text
 
-	def_objects
-	object SPRITE_FISHING_GURU, 2, 3, STAY, DOWN, 1 ; surfin' dude
-	object SPRITE_PIKACHU, 5, 3, WALK, 1, 2 ; pikachu
+	def_object_events
+	object_event  2,  3, SPRITE_FISHING_GURU, STAY, DOWN, 1 ; person
+	object_event  5,  3, SPRITE_PIKACHU, WALK, 1, 2 ; person
 
 	def_warps_to SUMMER_BEACH_HOUSE

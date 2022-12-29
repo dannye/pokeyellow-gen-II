@@ -1,51 +1,51 @@
-ATTR_BLK: MACRO
+MACRO ATTR_BLK
 ; This is a command macro.
 ; Use ATTR_BLK_DATA for data sets.
 	db ($4 << 3) + ((\1 * 6) / 16 + 1)
 	db \1
 ENDM
 
-ATTR_BLK_DATA: MACRO
+MACRO ATTR_BLK_DATA
 	db \1 ; which regions are affected
 	db \2 + (\3 << 2) + (\4 << 4) ; palette for each region
 	db \5, \6, \7, \8 ; x1, y1, x2, y2
 ENDM
 
-PAL_SET: MACRO
+MACRO PAL_SET
 	db ($a << 3) + 1
 	dw \1, \2, \3, \4
 	ds 7, 0
 ENDM
 
-PAL_TRN: MACRO
+MACRO PAL_TRN
 	db ($b << 3) + 1
 	ds 15, 0
 ENDM
 
-MLT_REQ: MACRO
+MACRO MLT_REQ
 	db ($11 << 3) + 1
 	db \1 - 1
 	ds 14, 0
 ENDM
 
-CHR_TRN: MACRO
+MACRO CHR_TRN
 	db ($13 << 3) + 1
 	db \1 + (\2 << 1)
 	ds 14, 0
 ENDM
 
-PCT_TRN: MACRO
+MACRO PCT_TRN
 	db ($14 << 3) + 1
 	ds 15, 0
 ENDM
 
-MASK_EN: MACRO
+MACRO MASK_EN
 	db ($17 << 3) + 1
 	db \1
 	ds 14, 0
 ENDM
 
-DATA_SND: MACRO
+MACRO DATA_SND
 	db ($f << 3) + 1
 	dw \1 ; address
 	db \2 ; bank
@@ -159,18 +159,19 @@ PctTrnPacket:  PCT_TRN
 MaskEnFreezePacket: MASK_EN 1
 MaskEnCancelPacket: MASK_EN 0
 
+
 ; These are DATA_SND packets containing SNES code.
 ; This set of packets is found in several Japanese SGB-compatible titles.
 ; It appears to be part of NCL's SGB devkit.
 
-DataSnd_728a1:
+DataSndPacket1:
 	DATA_SND $85d, $0, 11
 	db  $8C                 ; cpx #$8c (2)
 	db  $D0, $F4            ; bne -$0c
 	db  $60                 ; rts
 	ds  7, 0
 
-DataSnd_728b1:
+DataSndPacket2:
 	DATA_SND $852, $0, 11
 	db  $A9, $E7            ; lda #$e7
 	db  $9F, $01, $C0, $7E  ; sta $7ec001, x
@@ -180,7 +181,7 @@ DataSnd_728b1:
 	db  $E8                 ; inx
 	db  $E0                 ; cpx #$8c (1)
 
-DataSnd_728c1:
+DataSndPacket3:
 	DATA_SND $847, $0, 11
 	db  $C4                 ; cmp #$c4 (2)
 	db  $D0, $16            ; bne +$16
@@ -190,7 +191,7 @@ DataSnd_728c1:
 	db  $D0, $10            ; bne +$10
 	db  $A2, $28            ; ldx #$28
 
-DataSnd_728d1:
+DataSndPacket4:
 	DATA_SND $83c, $0, 11
 	db  $F0, $12            ; beq +$12
 	db  $A5                 ; lda dp
@@ -201,7 +202,7 @@ DataSnd_728d1:
 	db  $CA                 ; dex
 	db  $C9                 ; cmp #$c4 (1)
 
-DataSnd_728e1:
+DataSndPacket5:
 	DATA_SND $831, $0, 11
 	dbw $0C, $CAA5          ; tsb $caa5
 	db  $C9, $7E            ; cmp #$7e
@@ -210,7 +211,7 @@ DataSnd_728e1:
 	db  $CB                 ; wai
 	db  $C9, $7E            ; cmp #$7e
 
-DataSnd_728f1:
+DataSndPacket6:
 	DATA_SND $826, $0, 11
 	db  $39                 ; bne +$39 (2)
 	dbw $CD, $C48           ; cmp $c48
@@ -219,7 +220,7 @@ DataSnd_728f1:
 	db  $C9, $C9            ; cmp #$c9
 	db  $80, $D0            ; bra -$30
 
-DataSnd_72901:
+DataSndPacket7:
 	DATA_SND $81b, $0, 11
 	db  $EA                 ; nop
 	db  $EA                 ; nop
@@ -231,7 +232,7 @@ DataSnd_72901:
 	dbw $CD,$C4F            ; cmp $c4f
 	db  $D0                 ; bne +$39 (1)
 
-DataSnd_72911:
+DataSndPacket8:
 	DATA_SND $810, $0, 11
 	dbw $4C, $820           ; jmp $820
 	db  $EA                 ; nop
