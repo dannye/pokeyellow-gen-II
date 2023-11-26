@@ -2,12 +2,14 @@ DebugMenu:
 IF DEF(_DEBUG)
 	call ClearScreen
 
-	ld hl, DebugPlayerName
+	; These debug names are used for TestBattle.
+	; StartNewGameDebug uses the debug names from PrepareOakSpeech.
+	ld hl, DebugBattlePlayerName
 	ld de, wPlayerName
 	ld bc, NAME_LENGTH
 	call CopyData
 
-	ld hl, DebugRivalName
+	ld hl, DebugBattleRivalName
 	ld de, wRivalName
 	ld bc, NAME_LENGTH
 	call CopyData
@@ -54,26 +56,25 @@ IF DEF(_DEBUG)
 
 	; DEBUG
 	ld hl, wd732
-	set 1, [hl]
+	set BIT_DEBUG_MODE, [hl]
 	ld hl, StartNewGameDebug
 	ret
 
-DebugPlayerName:
+DebugBattlePlayerName:
 	db "Tom@"
 
-DebugRivalName:
+DebugBattleRivalName:
 	db "Juerry@"
 
 DebugMenuOptions:
 	db   "FIGHT"
 	next "DEBUG@"
 
-TestBattle:
+TestBattle: ; unreferenced except in _DEBUG
 	ld a, 1
 	ldh [hJoy7], a
 
-	; Don't mess around
-	; with obedience.
+	; Don't mess around with obedience.
 	ld a, 1 << BIT_EARTHBADGE
 	ld [wObtainedBadges], a
 

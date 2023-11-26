@@ -22,7 +22,7 @@ InitBattleVariables:
 	ld [hl], a ; wEnemyHPBarColor
 	xor a
 	ld hl, wCanEvolveFlags
-	ld b, $3c
+	ld b, wMiscBattleDataEnd - wMiscBattleData
 .loop
 	ld [hli], a
 	dec b

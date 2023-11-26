@@ -11,12 +11,12 @@ InitOpponent:
 
 DetermineWildOpponent:
 	ld a, [wd732]
-	bit 1, a
-	jr z, .notDebug
+	bit BIT_DEBUG_MODE, a
+	jr z, .notDebugMode
 	ldh a, [hJoyHeld]
-	bit BIT_B_BUTTON, a
+	bit BIT_B_BUTTON, a ; disable wild encounters
 	ret nz
-.notDebug
+.notDebugMode
 	ld a, [wNumberOfNoRandomBattleStepsLeft]
 	and a
 	ret nz
@@ -151,7 +151,6 @@ _InitBattleCommon:
 	db "@"
 
 _LoadTrainerPic:
-; wd033-wd034 contain pointer to pic
 	ld a, [wTrainerPicPointer]
 	ld e, a
 	ld a, [wTrainerPicPointer + 1]
@@ -181,7 +180,7 @@ LoadMonBackPic:
 	farcall LoadBackSpriteUnzoomed
 	ld hl, vSprites
 	ld de, vBackPic
-	ld c, (2*SPRITEBUFFERSIZE)/16 ; count of 16-byte chunks to be copied
+	ld c, (2 * SPRITEBUFFERSIZE) / 16 ; count of 16-byte chunks to be copied
 	ldh a, [hLoadedROMBank]
 	ld b, a
 	jp CopyVideoData

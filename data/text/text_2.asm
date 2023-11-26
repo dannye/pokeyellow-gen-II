@@ -957,7 +957,7 @@ _TrainerAboutToUseText::
 	text_ram wTrainerName
 	text " is"
 	line "about to use"
-	cont"@"
+	cont "@"
 	text_ram wEnemyMonNick
 	text "!"
 
@@ -1026,7 +1026,7 @@ _NoMovesLeftText::
 _MultiHitText::
 	text "Hit the enemy"
 	line "@"
-	text_decimal wPlayerNumHits,1,1
+	text_decimal wPlayerNumHits, 1, 1
 	text " times!"
 	prompt
 
