@@ -75,7 +75,7 @@ SetPal_StatusScreen:
 	ld de, wPalPacket
 	ld bc, $10
 	call CopyData
-	ld a, [wcf91]
+	ld a, [wCurPartySpecies]
 	cp NUM_POKEMON_INDEXES + 1
 	jr c, .pokemon
 	ld a, $1 ; not pokemon
@@ -103,7 +103,7 @@ SetPal_Pokedex:
 	ld de, wPalPacket
 	ld bc, $10
 	call CopyData
-	ld a, [wcf91]
+	ld a, [wCurPartySpecies]
 	call DeterminePaletteIDOutOfBattle
 	ld hl, wPalPacket + 3
 	ld [hl], a
@@ -300,7 +300,7 @@ BadgeBlkDataLengths:
 DeterminePaletteIDFront:
 	ld a, [hl]
 DeterminePaletteIDOutOfBattle:
-	ld [wd11e], a
+	ld [wPokedexNum], a
 	and a ; is the mon index 0?
 	ld a, [wTrainerClass]
 	ld hl, TrainerPalettes
@@ -309,7 +309,7 @@ GetMonPalID:
 	push bc
 	predef IndexToPokedex
 	pop bc
-	ld a, [wd11e]
+	ld a, [wPokedexNum]
 	ld hl, MonsterPalettes
 GetPalID:
 	ld e, a
@@ -320,7 +320,7 @@ GetPalID:
 
 DeterminePaletteIDBack:
 	ld a, [hl]
-	ld [wd11e], a
+	ld [wPokedexNum], a
 	and a
 	jp nz, GetMonPalID
 	ld a, [wBattleType]
@@ -749,7 +749,7 @@ SendSGBPackets:
 	pop hl
 	call InitGBCPalettes
 	ldh a, [rLCDC]
-	and rLCDC_ENABLE_MASK
+	and 1 << rLCDC_ENABLE
 	ret z
 	call Delay3
 	ret
@@ -888,7 +888,7 @@ TransferCurBGPData::
 	ld hl, wGBCPal
 	ld b, %10 ; mask for non-V-blank/non-H-blank STAT mode
 	ldh a, [rLCDC]
-	and rLCDC_ENABLE_MASK
+	and 1 << rLCDC_ENABLE
 	jr nz, .lcdEnabled
 	REPT NUM_PAL_COLORS
 		call TransferPalColorLCDDisabled
@@ -927,7 +927,7 @@ BufferBGPPal::
 TransferBGPPals::
 ; Transfer the buffered BG palettes.
 	ldh a, [rLCDC]
-	and rLCDC_ENABLE_MASK
+	and 1 << rLCDC_ENABLE
 	jr z, .lcdDisabled
 	di
 .waitLoop
@@ -964,7 +964,7 @@ TransferCurOBPData:
 	ld hl, wGBCPal
 	ld b, %10 ; mask for non-V-blank/non-H-blank STAT mode
 	ldh a, [rLCDC]
-	and rLCDC_ENABLE_MASK
+	and 1 << rLCDC_ENABLE
 	jr nz, .lcdEnabled
 	REPT NUM_PAL_COLORS
 		call TransferPalColorLCDDisabled

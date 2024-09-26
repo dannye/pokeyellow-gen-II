@@ -11,9 +11,11 @@ PrepareTitleScreen::
 	xor a
 	ldh [hWY], a
 	ld [wLetterPrintingDelayFlags], a
-	ld hl, wd732
+	ld hl, wStatusFlags6
 	ld [hli], a
+	assert wStatusFlags6 + 1 == wStatusFlags7
 	ld [hli], a
+	assert wStatusFlags7 + 1 == wElite4Flags
 	ld [hl], a
 	ld a, BANK(Music_TitleScreen)
 	ld [wAudioROMBank], a
@@ -152,7 +154,7 @@ DisplayTitleScreen:
 	call PlaySound
 .loop
 	xor a
-	ld [wUnusedCC5B], a
+	ld [wUnusedFlag], a
 	ld [wTitleScreenScene], a
 	ld [wTitleScreenScene + 1], a
 	ld [wTitleScreenScene + 2], a
@@ -378,10 +380,10 @@ IncrementResetCounter:
 
 FillSpriteBuffer0WithAA:
 	xor a
-	call SwitchSRAMBankAndLatchClockData
+	call OpenSRAM
 	ld hl, sSpriteBuffer0
 	ld bc, $20
 	ld a, $aa
 	call FillMemory
-	call PrepareRTCDataAndDisableSRAM
+	call CloseSRAM
 	ret
