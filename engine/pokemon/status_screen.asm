@@ -105,11 +105,11 @@ StatusScreen:
 	push af
 	xor a
 	ldh [hTileAnimations], a
-	hlcoord 19, 1
-	lb bc, 6, 10
+	hlcoord 19, 3
+	lb bc, 2, 8
 	call DrawLineBox ; Draws the box around name, HP and status
-	ld de, -6
-	add hl, de
+	hlcoord 2, 7
+	nop
 	ld [hl], "<DOT>"
 	dec hl
 	ld [hl], "№"
@@ -125,7 +125,7 @@ StatusScreen:
 	call GetHealthBarColor
 	ld b, SET_PAL_STATUS_SCREEN
 	call RunPaletteCommand
-	hlcoord 16, 6
+	hlcoord 16,6
 	ld de, wLoadedMonStatus
 	call PrintStatusCondition
 	jr nz, .StatusWritten
@@ -327,8 +327,9 @@ StatusScreen2:
 	hlcoord 9, 2
 	lb bc, 5, 10
 	call ClearScreenArea ; Clear under name
-	hlcoord 19, 3
-	ld [hl], $78
+	hlcoord 19, 1
+	lb bc, 6, 10
+	call DrawLineBox ; Draws the box around name, HP and status
 	hlcoord 0, 8
 	lb bc, 8, 18
 	call TextBoxBorder ; Draw move container
