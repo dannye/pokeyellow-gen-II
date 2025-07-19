@@ -77,7 +77,7 @@ DEF NUM_BATTLE_TRANSITION_BITS EQU const_value
 ; bit 1: set if enemy is at least 3 levels higher than player
 ; bit 2: set if dungeon map
 BattleTransitions:
-	table_width 2, BattleTransitions
+	table_width 2
 	dw BattleTransition_DoubleCircle      ; %000
 	dw BattleTransition_Spiral            ; %001
 	dw BattleTransition_Circle            ; %010
@@ -171,9 +171,9 @@ BattleTransition_BlackScreen:
 	ldh [rBGP], a
 	ldh [rOBP0], a
 	ldh [rOBP1], a
-	call UpdateGBCPal_BGP
-	call UpdateGBCPal_OBP0
-	call UpdateGBCPal_OBP1
+	call UpdateCGBPal_BGP
+	call UpdateCGBPal_OBP0
+	call UpdateCGBPal_OBP1
 	ret
 
 ; for non-dungeon trainer battles
@@ -337,7 +337,7 @@ BattleTransition_FlashScreen_:
 	cp 1
 	jr z, .done
 	ldh [rBGP], a
-	call UpdateGBCPal_BGP
+	call UpdateCGBPal_BGP
 	ld c, 2
 	call DelayFrames
 	jr .loop

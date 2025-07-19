@@ -21,7 +21,7 @@ HallOfFamePC:
 	call FillFourRowsWithBlack
 	ld a, %11000000
 	ldh [rBGP], a
-	call UpdateGBCPal_BGP
+	call UpdateCGBPal_BGP
 	call EnableLCD
 	call StopAllMusic
 	ld hl, vBGMap1
@@ -46,7 +46,7 @@ FadeInCreditsText:
 .loop
 	ld a, [hli]
 	ldh [rBGP], a
-	call UpdateGBCPal_BGP
+	call UpdateCGBPal_BGP
 	ld c, 5
 	call DelayFrames
 	dec b
@@ -65,7 +65,7 @@ DisplayCreditsMon:
 	xor a
 	ldh [hAutoBGTransferEnabled], a
 	ld hl, rLCDC
-	set rLCDC_BG_TILEMAP, [hl]
+	set B_LCDC_BG_MAP, [hl]
 	call SaveScreenTilesToBuffer2
 	call FillMiddleOfScreenWithWhite
 	call GetNextCreditsMon
@@ -78,9 +78,9 @@ DisplayCreditsMon:
 	call CreditsCopyTileMapToVRAM
 	ld a, %11111100 ; make the mon a black silhouette
 	ldh [rBGP], a
-	call UpdateGBCPal_BGP
+	call UpdateCGBPal_BGP
 	ld hl, rLCDC
-	res rLCDC_BG_TILEMAP, [hl]
+	res B_LCDC_BG_MAP, [hl]
 	ld a, 1
 	ldh [hAutoBGTransferEnabled], a
 	ld b, 0
@@ -94,7 +94,7 @@ DisplayCreditsMon:
 	call ScrollCreditsMonLeft
 	ld a, %11000000
 	ldh [rBGP], a
-	call UpdateGBCPal_BGP
+	call UpdateCGBPal_BGP
 	xor a
 	ldh [hSCX], a
 	ret

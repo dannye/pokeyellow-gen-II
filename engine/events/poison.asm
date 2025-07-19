@@ -1,6 +1,6 @@
 ApplyOutOfBattlePoisonDamage:
 	ld a, [wStatusFlags5]
-	assert BIT_SCRIPTED_MOVEMENT_STATE == 7
+	ASSERT BIT_SCRIPTED_MOVEMENT_STATE == 7
 	add a ; overflows scripted movement state bit into carry flag
 	jp c, .noBlackOut ; no black out if joypad states are being simulated
 	ld a, [wd492]
@@ -22,7 +22,7 @@ ApplyOutOfBattlePoisonDamage:
 	ld de, wPartySpecies
 .applyDamageLoop
 	ld a, [hl]
-	and (1 << PSN)
+	and 1 << PSN
 	jr z, .nextMon2 ; not poisoned
 	dec hl
 	dec hl
@@ -64,7 +64,7 @@ ApplyOutOfBattlePoisonDamage:
 	call DisplayTextID
 	callfar IsThisPartymonStarterPikachu_Party
 	jr nc, .curMonNotPlayerPikachu
-	ld e, $3
+	ldpikacry e, PikachuCry4
 	callfar PlayPikachuSoundClip
 	calladb_ModifyPikachuHappiness PIKAHAPPY_PSNFNT
 .curMonNotPlayerPikachu
@@ -92,7 +92,7 @@ ApplyOutOfBattlePoisonDamage:
 	ld e, 0
 .countPoisonedLoop
 	ld a, [hl]
-	and (1 << PSN)
+	and 1 << PSN
 	or e
 	ld e, a
 	ld bc, wPartyMon2 - wPartyMon1
@@ -103,7 +103,7 @@ ApplyOutOfBattlePoisonDamage:
 	and a ; are any party members poisoned?
 	jr z, .skipPoisonEffectAndSound
 	ld b, $2
-	predef ChangeBGPalColor0_4Frames ; change BG white to dark grey for 4 frames
+	predef ChangeBGPalColor0_4Frames ; change BG white to dark gray for 4 frames
 	ld a, SFX_POISONED
 	call PlaySound
 .skipPoisonEffectAndSound
@@ -148,5 +148,5 @@ Func_c4c7:
 	ret nz
 .asm_c4ef
 	xor a
-	ld [wd49c], a
+	ld [wd49b], a
 	ret

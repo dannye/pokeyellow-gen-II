@@ -222,7 +222,7 @@ PikaPicAnimTimerAndJoypad:
 	ret nz
 	call JoypadLowSensitivity
 	ldh a, [hJoyPressed]
-	and A_BUTTON | B_BUTTON
+	and PAD_A | PAD_B
 	ret
 
 CheckPikaPicAnimTimer:
@@ -845,7 +845,7 @@ PikaPicAnimCommand_thunderbolt:
 .UpdatePal:
 	ld a, b
 	ldh [rBGP], a
-	call UpdateGBCPal_BGP
+	call UpdateCGBPal_BGP
 	call DelayFrames
 	ret
 

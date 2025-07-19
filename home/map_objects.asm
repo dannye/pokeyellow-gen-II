@@ -71,11 +71,12 @@ IsItemInBag::
 	ret
 
 IsSurfingPikachuInParty::
-; set bit 6 of wd472 if true
-; also calls Func_3467, which is a bankswitch to IsStarterPikachuInOurParty
-	ld a, [wd472]
+; set bit 6 of wd471 if any Pikachu with Surf is in party
+; set bit 7 of wd471 if starter Pikachu is in party (with or without Surf)
+; also performs a bankswitch to IsStarterPikachuInOurParty
+	ld a, [wd471]
 	and $3f
-	ld [wd472], a
+	ld [wd471], a
 	ld hl, wPartyMon1
 	ld c, PARTY_LENGTH
 	ld b, SURF
@@ -99,9 +100,9 @@ IsSurfingPikachuInParty::
 	cp b
 	jr nz, .noSurf
 .hasSurf
-	ld a, [wd472]
+	ld a, [wd471]
 	set 6, a
-	ld [wd472], a
+	ld [wd471], a
 .noSurf
 	pop hl
 .notPikachu
@@ -109,19 +110,19 @@ IsSurfingPikachuInParty::
 	add hl, de
 	dec c
 	jr nz, .loop
-	call Func_3467
+	call .checkForStarter
 	ret
 
-Func_3467::
+.checkForStarter
 	push hl
 	push bc
 	callfar IsStarterPikachuInOurParty
 	pop bc
 	pop hl
 	ret nc
-	ld a, [wd472]
+	ld a, [wd471]
 	set 7, a
-	ld [wd472], a
+	ld [wd471], a
 	ret
 
 DisplayPokedex::
@@ -293,9 +294,9 @@ SetSpriteMovementBytesToFE::
 SetSpriteMovementBytesToFF::
 	push hl
 	call GetSpriteMovementByte1Pointer
-	ld [hl], $FF
+	ld [hl], STAY
 	call GetSpriteMovementByte2Pointer
-	ld [hl], $FF ; prevent person from walking?
+	ld [hl], NONE
 	pop hl
 	ret
 

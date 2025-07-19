@@ -1,6 +1,6 @@
 EnterMap::
 ; Load a new map.
-	ld a, A_BUTTON | B_BUTTON | SELECT | START | D_RIGHT | D_LEFT | D_UP | D_DOWN
+	ld a, PAD_BUTTONS | PAD_CTRL_PAD
 	ld [wJoyIgnore], a
 	call LoadMapData
 	farcall ClearVariablesOnEnterMap
@@ -73,14 +73,14 @@ OverworldLoopLessDelay::
 .notSimulating
 	ldh a, [hJoyPressed]
 .checkIfStartIsPressed
-	bit BIT_START, a
+	bit B_PAD_START, a
 	jr z, .startButtonNotPressed
 ; if START is pressed
 	xor a ; TEXT_START_MENU
 	ldh [hTextID], a
 	jp .displayDialogue
 .startButtonNotPressed
-	bit BIT_A_BUTTON, a
+	bit B_PAD_A, a
 	jp z, .checkIfDownButtonIsPressed
 ; if A is pressed
 	ld a, [wStatusFlags5]
@@ -93,7 +93,7 @@ OverworldLoopLessDelay::
 	and a
 	jp z, OverworldLoop ; jump if a hidden object or bookshelf was found, but not if a card key door was found
 	xor a
-	ld [wd436], a ; new yellow address
+	ld [wd435], a ; new yellow address
 	call IsSpriteOrSignInFrontOfPlayer
 	call Func_0ffe
 	ldh a, [hTextID]
@@ -127,7 +127,7 @@ OverworldLoopLessDelay::
 	ld hl, wMiscFlags
 	res BIT_TURNING, [hl]
 	xor a
-	ld [wd435], a
+	ld [wd434], a
 	ld a, 1
 	ld [wCheckFor180DegreeTurn], a
 	ld a, [wPlayerMovingDirection] ; the direction that was pressed last time
@@ -142,7 +142,7 @@ OverworldLoopLessDelay::
 
 .checkIfDownButtonIsPressed
 	ldh a, [hJoyHeld] ; current joypad state
-	bit BIT_D_DOWN, a
+	bit B_PAD_DOWN, a
 	jr z, .checkIfUpButtonIsPressed
 	ld a, 1
 	ld [wSpritePlayerStateData1YStepVector], a
@@ -150,7 +150,7 @@ OverworldLoopLessDelay::
 	jr .handleDirectionButtonPress
 
 .checkIfUpButtonIsPressed
-	bit BIT_D_UP, a
+	bit B_PAD_UP, a
 	jr z, .checkIfLeftButtonIsPressed
 	ld a, -1
 	ld [wSpritePlayerStateData1YStepVector], a
@@ -158,7 +158,7 @@ OverworldLoopLessDelay::
 	jr .handleDirectionButtonPress
 
 .checkIfLeftButtonIsPressed
-	bit BIT_D_LEFT, a
+	bit B_PAD_LEFT, a
 	jr z, .checkIfRightButtonIsPressed
 	ld a, -1
 	ld [wSpritePlayerStateData1XStepVector], a
@@ -166,7 +166,7 @@ OverworldLoopLessDelay::
 	jr .handleDirectionButtonPress
 
 .checkIfRightButtonIsPressed
-	bit BIT_D_RIGHT, a
+	bit B_PAD_RIGHT, a
 	jr z, .noDirectionButtonsPressed
 	ld a, 1
 	ld [wSpritePlayerStateData1XStepVector], a
@@ -186,7 +186,7 @@ OverworldLoopLessDelay::
 	cp b
 	jr z, .noDirectionChange
 	ld a, $8
-	ld [wd435], a
+	ld [wd434], a
 ; unlike in red/blue, yellow does not have the 180 degrees odd code
 	ld hl, wMiscFlags
 	set BIT_TURNING, [hl]
@@ -239,7 +239,7 @@ OverworldLoopLessDelay::
 	ld hl, wMiscFlags
 	res BIT_TURNING, [hl]
 	xor a
-	ld [wd435], a
+	ld [wd434], a
 	call DoBikeSpeedup
 	call AdvancePlayerSprite
 	ld a, [wWalkCounter]
@@ -350,7 +350,7 @@ DoBikeSpeedup::
 	cp ROUTE_17 ; Cycling Road
 	jr nz, .goFaster
 	ldh a, [hJoyHeld]
-	and D_UP | D_LEFT | D_RIGHT
+	and PAD_UP | PAD_LEFT | PAD_RIGHT
 	ret nz
 .goFaster
 	call AdvancePlayerSprite
@@ -401,7 +401,7 @@ CheckWarpsNoCollisionLoop::
 	pop bc
 	pop de
 	ldh a, [hJoyHeld]
-	and D_DOWN | D_UP | D_LEFT | D_RIGHT
+	and PAD_CTRL_PAD
 	jr z, CheckWarpsNoCollisionRetry2 ; if directional buttons aren't being pressed, do not pass through the warp
 	jr WarpFound1
 
@@ -769,7 +769,7 @@ HandleFlyWarpOrDungeonWarp::
 	set BIT_FLY_OR_DUNGEON_WARP, [hl]
 	res BIT_ALWAYS_ON_BIKE, [hl]
 	call LeaveMapAnim
-	call Func_07c4
+	call StopBikeSurf
 	ld a, BANK(PrepareForSpecialWarp)
 	call BankswitchCommon
 	call PrepareForSpecialWarp
@@ -778,7 +778,7 @@ HandleFlyWarpOrDungeonWarp::
 LeaveMapAnim::
 	farjp _LeaveMapAnim
 
-Func_07c4::
+StopBikeSurf:
 	ld a, [wWalkBikeSurfState]
 	and a
 	ret z
@@ -1169,7 +1169,7 @@ IsSpriteInFrontOfPlayer2::
 	cp $f
 	jr nz, .dontwritetowd436
 	ld a, $FF
-	ld [wd436], a
+	ld [wd435], a
 .dontwritetowd436
 	scf
 	ret
@@ -1233,7 +1233,7 @@ CollisionCheckOnLand::
 	ldh [hTextID], a
 	call IsSpriteInFrontOfPlayer ; check for sprite collisions again? when does the above check fail to detect a sprite collision?
 	jr nc, .asm_0a5c
-	res 7, [hl]
+	res BIT_FACE_PLAYER, [hl]
 	ldh a, [hTextID]
 	and a ; was there a sprite collision?
 	jr z, .asm_0a5c
@@ -1245,7 +1245,7 @@ CollisionCheckOnLand::
 	ldh a, [hJoyHeld]
 	and $2
 	jr nz, .asm_0a5c
-	ld hl, wd435
+	ld hl, wd434
 	ld a, [hl]
 	and a
 	jr z, .asm_0a5c
@@ -1359,12 +1359,12 @@ LoadCurrentMapView::
 	ld e, a
 	ld a, [wCurrentTileBlockMapViewPointer + 1]
 	ld d, a
-	ld hl, wTileMapBackup
-	ld b, $05
+	ld hl, wSurroundingTiles
+	ld b, SCREEN_BLOCK_HEIGHT
 .rowLoop ; each loop iteration fills in one row of tile blocks
 	push hl
 	push de
-	ld c, $06
+	ld c, SCREEN_BLOCK_WIDTH
 .rowInnerLoop ; loop to draw each tile block of the current row
 	push bc
 	push de
@@ -1393,7 +1393,7 @@ LoadCurrentMapView::
 .noCarry
 ; update tile map pointer to next row's address
 	pop hl
-	ld a, $60
+	ld a, SURROUNDING_WIDTH * BLOCK_HEIGHT
 	add l
 	ld l, a
 	jr nc, .noCarry2
@@ -1401,19 +1401,19 @@ LoadCurrentMapView::
 .noCarry2
 	dec b
 	jr nz, .rowLoop
-	ld hl, wTileMapBackup
-	ld bc, $0
+	ld hl, wSurroundingTiles
+	ld bc, 0
 .adjustForYCoordWithinTileBlock
 	ld a, [wYBlockCoord]
 	and a
 	jr z, .adjustForXCoordWithinTileBlock
-	ld bc, $30
+	ld bc, SURROUNDING_WIDTH * 2
 	add hl, bc
 .adjustForXCoordWithinTileBlock
 	ld a, [wXBlockCoord]
 	and a
 	jr z, .copyToVisibleAreaBuffer
-	ld bc, $2
+	ld bc, BLOCK_WIDTH / 2
 	add hl, bc
 .copyToVisibleAreaBuffer
 	decoord 0, 0 ; base address for the tiles that are directly transferred to VRAM during V-blank
@@ -1426,7 +1426,7 @@ LoadCurrentMapView::
 	inc de
 	dec c
 	jr nz, .rowInnerLoop2
-	ld a, $04
+	ld a, SURROUNDING_WIDTH - SCREEN_WIDTH
 	add l
 	ld l, a
 	jr nc, .noCarry3
@@ -1520,7 +1520,7 @@ ScheduleColumnRedrawHelper::
 	ld a, [hl]
 	ld [de], a
 	inc de
-	ld a, 19
+	ld a, SCREEN_WIDTH - 1
 	add l
 	ld l, a
 	jr nc, .noCarry
@@ -1561,22 +1561,18 @@ DrawTileBlock::
 	ld d, h
 	ld e, l ; de = address of the tile block's tiles
 	pop hl
-	ld c, $04 ; 4 loop iterations
+	ld c, BLOCK_HEIGHT ; 4 loop iterations
 .loop ; each loop iteration, write 4 tile numbers
 	push bc
+REPT BLOCK_WIDTH - 1
 	ld a, [de]
 	ld [hli], a
 	inc de
-	ld a, [de]
-	ld [hli], a
-	inc de
-	ld a, [de]
-	ld [hli], a
-	inc de
+ENDR
 	ld a, [de]
 	ld [hl], a
 	inc de
-	ld bc, $15
+	ld bc, SURROUNDING_WIDTH - (BLOCK_WIDTH - 1)
 	add hl, bc
 	pop bc
 	dec c
@@ -1602,9 +1598,9 @@ ForceBikeDown::
 	cp ROUTE_17 ; Cycling Road
 	ret nz
 	ldh a, [hJoyHeld]
-	and D_DOWN | D_UP | D_LEFT | D_RIGHT | B_BUTTON | A_BUTTON
+	and PAD_CTRL_PAD | PAD_B | PAD_A
 	ret nz
-	ld a, D_DOWN
+	ld a, PAD_DOWN
 	ldh [hJoyHeld], a ; on the cycling road, if there isn't a trainer and the player isn't pressing buttons, simulate a down press
 	ret
 
@@ -1746,13 +1742,13 @@ RunMapScript::
 LoadWalkingPlayerSpriteGraphics::
 ; new sprite copy stuff
 	xor a
-	ld [wd473], a
+	ld [wd472], a
 	ld b, BANK(RedSprite)
 	ld de, RedSprite
 	jr LoadPlayerSpriteGraphicsCommon
 
 LoadSurfingPlayerSpriteGraphics2::
-	ld a, [wd473]
+	ld a, [wd472]
 	and a
 	jr z, .asm_0d75
 	dec a
@@ -1760,7 +1756,7 @@ LoadSurfingPlayerSpriteGraphics2::
 	dec a
 	jr z, .asm_0d7c
 .asm_0d75
-	ld a, [wd472]
+	ld a, [wd471]
 	bit 6, a
 	jr z, LoadSurfingPlayerSpriteGraphics
 .asm_0d7c
@@ -2052,7 +2048,7 @@ CopyMapViewToVRAM2:
 	inc e
 	dec c
 	jr nz, .vramCopyInnerLoop
-	ld a, BG_MAP_WIDTH - SCREEN_WIDTH
+	ld a, TILEMAP_WIDTH - SCREEN_WIDTH
 	add e
 	ld e, a
 	jr nc, .noCarry
@@ -2288,14 +2284,14 @@ CheckForUserInterruption::
 	pop bc
 
 	ldh a, [hJoyHeld]
-	cp D_UP + SELECT + B_BUTTON
+	cp PAD_UP + PAD_SELECT + PAD_B
 	jr z, .input
 
 	ldh a, [hJoy5]
 IF DEF(_DEBUG)
-	and START | SELECT | A_BUTTON
+	and PAD_START | PAD_SELECT | PAD_A
 ELSE
-	and START | A_BUTTON
+	and PAD_START | PAD_A
 ENDC
 	jr nz, .input
 
@@ -2318,7 +2314,7 @@ LoadDestinationWarpPosition::
 	push af
 	ld a, [wPredefParentBank]
 	ldh [hLoadedROMBank], a
-	ld [MBC1RomBank], a
+	ld [rROMB], a
 	ld a, b
 	add a
 	add a
@@ -2330,5 +2326,5 @@ LoadDestinationWarpPosition::
 	call CopyData
 	pop af
 	ldh [hLoadedROMBank], a
-	ld [MBC1RomBank], a
+	ld [rROMB], a
 	ret

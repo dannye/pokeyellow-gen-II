@@ -39,7 +39,7 @@ BillsHouseScript_1e09e:
 	ret
 
 BillsHouseScript0:
-	ld a, [wd472]
+	ld a, [wd471]
 	bit 7, a
 	jr z, .asm_1e0d2
 	callfar CheckPikachuFaintedOrStatused
@@ -56,7 +56,7 @@ BillsHouseScript1:
 	ret
 
 BillsHouseScript2:
-	ld a, A_BUTTON | B_BUTTON | SELECT | START | D_RIGHT | D_LEFT | D_UP | D_DOWN
+	ld a, PAD_BUTTONS | PAD_CTRL_PAD
 	ld [wJoyIgnore], a
 	ld a, [wSpritePlayerStateData1FacingDirection]
 	and a ; cp SPRITE_FACING_DOWN
@@ -135,7 +135,7 @@ PikachuMovementData_1e152:
 BillsHouseScript4:
 	CheckEvent EVENT_USED_CELL_SEPARATOR_ON_BILL
 	ret z
-	ld a, SELECT | START | D_RIGHT | D_LEFT | D_UP | D_DOWN
+	ld a, PAD_SELECT | PAD_START | PAD_CTRL_PAD
 	ld [wJoyIgnore], a
 	ld a, SCRIPT_BILLSHOUSE_SCRIPT5
 	ld [wBillsHouseCurScript], a
@@ -158,7 +158,7 @@ BillsHouseScript5:
 	predef ShowObject
 	ld c, 8
 	call DelayFrames
-	ld hl, wd472
+	ld hl, wd471
 	bit 7, [hl]
 	jr z, .asm_1e1c6
 	call CheckPikachuFollowingPlayer
@@ -213,7 +213,7 @@ BillsHouseScript7:
 	ld [wPlayerMovingDirection], a
 	ld a, SPRITE_FACING_UP
 	ld [wSpritePlayerStateData1FacingDirection], a
-	ld a, ~(A_BUTTON | B_BUTTON)
+	ld a, PAD_SELECT | PAD_START | PAD_CTRL_PAD
 	ld [wJoyIgnore], a
 	ld de, RLE_1e219
 	ld hl, wSimulatedJoypadStatesEnd
@@ -226,7 +226,7 @@ BillsHouseScript7:
 	ret
 
 RLE_1e219:
-	db D_RIGHT, $3
+	db PAD_RIGHT, $3
 	db $FF
 
 BillsHouseScript8:

@@ -179,7 +179,7 @@ DisplayIntroNameTextBox:
 	ld [wLastMenuItem], a
 	inc a
 	ld [wTopMenuItemX], a
-	ld [wMenuWatchedKeys], a ; A_BUTTON
+	ld [wMenuWatchedKeys], a ; PAD_A
 	inc a
 	ld [wTopMenuItemY], a
 	inc a

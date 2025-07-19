@@ -9,7 +9,7 @@ TryEvolvingMon:
 	call Evolution_FlagAction
 
 ; this is only called after battle
-; it is supposed to do level up evolutions, though there is a bug that allows item evolutions to occur
+; it does level up evolutions, though there was a bug in red/blue that allows item evolutions to occur which is patched here
 EvolutionAfterBattle:
 	ldh a, [hTileAnimations]
 	push af
@@ -99,7 +99,7 @@ Evolution_PartyMonLoop: ; loop over party mons
 	jp nz, .nextEvoEntry1 ; don't evolve if we're in a battle as wCurPartySpecies could be holding the last mon sent out
 
 	ld b, a ; evolution item
-	ld a, [wCurItem]
+	ld a, [wCurItem] ; same as [wCurPartySpecies]
 	cp b ; was the evolution item in this entry used?
 	jp nz, .nextEvoEntry1 ; if not, go to the next evolution entry
 .checkLevel
@@ -264,7 +264,7 @@ Evolution_PartyMonLoop: ; loop over party mons
 RenameEvolvedMon:
 ; Renames the mon to its new, evolved form's standard name unless it had a
 ; nickname, in which case the nickname is kept.
-	assert wCurSpecies == wNameListIndex ; save+restore wCurSpecies while using wNameListIndex
+	ASSERT wCurSpecies == wNameListIndex ; save+restore wCurSpecies while using wNameListIndex
 	ld a, [wCurSpecies]
 	push af
 	ld a, [wMonHIndex]
@@ -373,7 +373,7 @@ LearnMoveFromLevelUp:
 	jr nz, .done
 .foundThunderOrThunderbolt
 	ld a, $5
-	ld [wd49c], a
+	ld [wd49b], a
 	ld a, $85
 	ld [wPikachuMood], a
 .done

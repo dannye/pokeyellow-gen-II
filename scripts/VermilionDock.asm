@@ -14,7 +14,7 @@ VermilionDock_Script:
 	ld hl, wStatusFlags5
 	set BIT_SCRIPTED_MOVEMENT_STATE, [hl]
 	ld hl, wSimulatedJoypadStatesEnd
-	ld a, D_UP
+	ld a, PAD_UP
 	ld [hli], a
 	ld [hli], a
 	ld [hl], a
@@ -62,7 +62,7 @@ VermilionDockSSAnneLeavesScript:
 	ldh [hAutoBGTransferEnabled], a
 	ld [wSSAnneSmokeDriftAmount], a
 	ldh [rOBP1], a
-	call UpdateGBCPal_OBP1
+	call UpdateCGBPal_OBP1
 	ld a, 88
 	ld [wSSAnneSmokeX], a
 	ld hl, wMapViewVRAMPointer
@@ -155,7 +155,7 @@ VermilionDock_EmitSmokePuff:
 	ret
 
 VermilionDockOAMBlock:
-	; tile id, attribute
+; tile ID, attributes
 	db $fc, $10
 	db $fd, $10
 	db $fe, $10

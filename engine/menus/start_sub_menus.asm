@@ -57,7 +57,7 @@ StartMenu_Pokemon::
 	inc hl
 	ld a, b
 	ld [hli], a ; max menu item ID
-	ld a, A_BUTTON | B_BUTTON
+	ld a, PAD_A | PAD_B
 	ld [hli], a ; menu watched keys
 	xor a
 	ld [hl], a
@@ -65,7 +65,7 @@ StartMenu_Pokemon::
 	push af
 	call LoadScreenTilesFromBuffer1 ; restore saved screen
 	pop af
-	bit BIT_B_BUTTON, a
+	bit B_PAD_B, a
 	jp nz, .loop
 ; if the B button wasn't pressed
 	ld a, [wMaxMenuItem]
@@ -176,7 +176,7 @@ StartMenu_Pokemon::
 .surfingPikachu
 	ld a, $2
 .continue
-	ld [wd473], a
+	ld [wd472], a
 	ld a, SURFBOARD
 	ld [wCurItem], a
 	ld [wPseudoItemID], a
@@ -188,7 +188,7 @@ StartMenu_Pokemon::
 	jp .goBackToMap
 .reloadNormalSprite
 	xor a
-	ld [wd473], a
+	ld [wd472], a
 	jp .loop
 .strength
 	bit BIT_RAINBOWBADGE, a
@@ -371,13 +371,13 @@ StartMenu_Item::
 	inc hl
 	inc a ; a = 1
 	ld [hli], a ; max menu item ID
-	ld a, A_BUTTON | B_BUTTON
+	ld a, PAD_A | PAD_B
 	ld [hli], a ; menu watched keys
 	xor a
 	ld [hl], a ; old menu item id
 	call HandleMenuInput
 	call PlaceUnfilledArrowMenuCursor
-	bit BIT_B_BUTTON, a
+	bit B_PAD_B, a
 	jr z, .useOrTossItem
 	jp ItemMenuLoop
 .useOrTossItem ; if the player made the choice to use or toss the item
@@ -570,7 +570,7 @@ DrawTrainerInfo:
 	call PlaceString
 	hlcoord 8, 4
 	ld de, wPlayerMoney
-	ld c, $e3
+	ld c, 3 | LEADING_ZEROES | LEFT_ALIGN | MONEY_SIGN
 	call PrintBCDNumber
 	hlcoord 9, 6
 	ld de, wPlayTimeHours ; hours

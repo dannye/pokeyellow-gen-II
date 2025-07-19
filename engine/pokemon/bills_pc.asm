@@ -69,7 +69,7 @@ DisplayPCMainMenu::
 	ld de, LogOffPCText
 .next3
 	call PlaceString
-	ld a, A_BUTTON | B_BUTTON
+	ld a, PAD_A | PAD_B
 	ld [wMenuWatchedKeys], a
 	ld a, 2
 	ld [wTopMenuItemY], a
@@ -135,7 +135,7 @@ BillsPCMenu:
 	inc hl
 	ld a, 5
 	ld [hli], a ; wMaxMenuItem
-	ld a, A_BUTTON | B_BUTTON
+	ld a, PAD_A | PAD_B
 	ld [hli], a ; wMenuWatchedKeys
 	xor a
 	ld [hli], a ; wLastMenuItem
@@ -170,7 +170,7 @@ BillsPCMenu:
 	ld b, SET_PAL_OVERWORLD
 	call RunPaletteCommand
 	call HandleMenuInput
-	bit BIT_B_BUTTON, a
+	bit B_PAD_B, a
 	jp nz, ExitBillsPC
 	call PlaceUnfilledArrowMenuCursor
 	ld a, [wCurrentMenuItem]
@@ -239,7 +239,7 @@ BillsPCDeposit:
 	jp nc, BillsPCMenu
 	callfar IsThisPartymonStarterPikachu_Party
 	jr nc, .asm_215c9
-	ld e, $1b
+	ldpikacry e, PikachuCry28
 	callfar PlayPikachuSoundClip
 	jr .asm_215cf
 .asm_215c9
@@ -302,7 +302,7 @@ BillsPCWithdraw:
 	call GetPartyMonName
 	callfar IsThisPartymonStarterPikachu_Box
 	jr nc, .asm_21660
-	ld e, $22
+	ldpikacry e, PikachuCry35
 	callfar PlayPikachuSoundClip
 	jr .asm_21666
 .asm_21660
@@ -353,7 +353,7 @@ BillsPCRelease:
 	ld a, [wWhichPokemon]
 	ld hl, wBoxMonNicks
 	call GetPartyMonName
-	ld e, $27
+	ldpikacry e, PikachuCry40
 	callfar PlayPikachuSoundClip
 	ld hl, PikachuUnhappyText
 	call PrintText
@@ -447,7 +447,7 @@ DisplayDepositWithdrawMenu:
 	inc hl
 	ld a, 2
 	ld [hli], a ; wMaxMenuItem
-	ld a, A_BUTTON | B_BUTTON
+	ld a, PAD_A | PAD_B
 	ld [hli], a ; wMenuWatchedKeys
 	xor a
 	ld [hl], a ; wLastMenuItem
@@ -458,7 +458,7 @@ DisplayDepositWithdrawMenu:
 	ld [wPartyAndBillsPCSavedMenuItem], a
 .loop
 	call HandleMenuInput
-	bit BIT_B_BUTTON, a
+	bit B_PAD_B, a
 	jr nz, .exit
 	ld a, [wCurrentMenuItem]
 	and a

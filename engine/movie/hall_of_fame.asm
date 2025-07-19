@@ -12,7 +12,7 @@ AnimateHallOfFame:
 	call FillMemory
 	call EnableLCD
 	ld hl, rLCDC
-	set rLCDC_BG_TILEMAP, [hl]
+	set B_LCDC_BG_MAP, [hl]
 	xor a
 	ld hl, wHallOfFame
 	ld bc, HOF_TEAM
@@ -87,7 +87,7 @@ AnimateHallOfFame:
 	xor a
 	ldh [hWY], a
 	ld hl, rLCDC
-	res rLCDC_BG_TILEMAP, [hl]
+	res B_LCDC_BG_MAP, [hl]
 	ret
 
 HallOfFameText:
@@ -121,7 +121,7 @@ HoFShowMonOrPlayer:
 	call RunPaletteCommand
 	ld a, %11100100
 	ldh [rBGP], a
-	call UpdateGBCPal_BGP
+	call UpdateCGBPal_BGP
 	ld c, $31 ; back pic
 	call HoFLoadMonPlayerPicTileIDs
 	ld d, $a0
@@ -158,7 +158,7 @@ HoFDisplayAndRecordMonInfo:
 	ld [wWhichPokemon], a
 	callfar IsThisPartymonStarterPikachu_Party
 	jr nc, .asm_70336
-	ld e, $22
+	ldpikacry e, PikachuCry35
 	callfar PlayPikachuSoundClip
 	jr .asm_7033c
 .asm_70336
@@ -254,7 +254,7 @@ HoFDisplayPlayerStats:
 	call PlaceString
 	hlcoord 4, 10
 	ld de, wPlayerMoney
-	ld c, $a3
+	ld c, 3 | LEADING_ZEROES | MONEY_SIGN
 	call PrintBCDNumber
 	ld hl, DexSeenOwnedText
 	call HoFPrintTextAndDelay

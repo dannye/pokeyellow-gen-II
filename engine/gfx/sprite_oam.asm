@@ -2,7 +2,7 @@ PrepareOAMData::
 ; Determine OAM data for currently visible
 ; sprites and write it to wShadowOAM.
 ; Yellow code has been changed to use registers more efficiently
-; as well as tweaking the code to show gbc palettes
+; as well as tweaking the code to show cgb palettes
 
 	ld a, [wUpdateSpritesEnabled]
 	dec a
@@ -119,7 +119,7 @@ PrepareOAMData::
 	or [hl]
 .skipPriority
 	and $f0
-	bit OAM_OBP_NUM, a
+	bit B_OAM_PAL1, a
 	jr z, .spriteusesOBP0
 	or OAM_HIGH_PALS
 .spriteusesOBP0

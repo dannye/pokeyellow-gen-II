@@ -482,7 +482,7 @@ ItemUseBall:
 
 	push hl
 
-; If the Pokémon is transformed, the Pokémon is assumed to be a Ditto.
+; Bug: If the Pokémon is transformed, the Pokémon is assumed to be a Ditto.
 ; This is a bug because a wild Pokémon could have used Transform via
 ; Mirror Move even though the only wild Pokémon that knows Transform is Ditto.
 	ld hl, wEnemyBattleStatus3
@@ -562,7 +562,7 @@ ItemUseBall:
 
 .skipShowingPokedexData
 	ld a, $1
-	ld [wd49c], a
+	ld [wd49b], a
 	ld a, $85
 	ld [wPikachuMood], a
 	ld a, [wPartyCount]
@@ -758,15 +758,15 @@ ItemUseSurfboard:
 .makePlayerMoveForward
 	ld a, [wPlayerDirection] ; direction the player is going
 	bit PLAYER_DIR_BIT_UP, a
-	ld b, D_UP
+	ld b, PAD_UP
 	jr nz, .storeSimulatedButtonPress
 	bit PLAYER_DIR_BIT_DOWN, a
-	ld b, D_DOWN
+	ld b, PAD_DOWN
 	jr nz, .storeSimulatedButtonPress
 	bit PLAYER_DIR_BIT_LEFT, a
-	ld b, D_LEFT
+	ld b, PAD_LEFT
 	jr nz, .storeSimulatedButtonPress
-	ld b, D_RIGHT
+	ld b, PAD_RIGHT
 .storeSimulatedButtonPress
 	ld a, b
 	ld [wSimulatedJoypadStatesEnd], a
@@ -811,7 +811,7 @@ ItemUseEvoStone:
 	jr nc, .noEffect
 	callfar IsThisPartymonStarterPikachu_Party
 	jr nc, .notPlayerPikachu
-	ld e, $1b
+	ldpikacry e, PikachuCry28
 	callfar PlayPikachuSoundClip
 	ld a, [wWhichPokemon]
 	ld hl, wPartyMonNicks
@@ -819,7 +819,7 @@ ItemUseEvoStone:
 	ld hl, RefusingText
 	call PrintText
 	ld a, $4
-	ld [wd49c], a
+	ld [wd49b], a
 	ld a, $82
 	ld [wPikachuMood], a
 	jr .canceledItemUse
@@ -828,7 +828,7 @@ ItemUseEvoStone:
 	ld a, SFX_HEAL_AILMENT
 	call PlaySoundWaitForCurrent
 	call WaitForSoundToFinish
-	ld a, $01
+	ld a, TRUE
 	ld [wForceEvolution], a
 	callfar TryEvolvingMon ; try to evolve pokemon
 	pop af
@@ -2124,7 +2124,7 @@ FishingInit:
 	ld a, SFX_HEAL_AILMENT
 	call PlaySound
 	ld a, $2
-	ld [wd49c], a
+	ld [wd49b], a
 	ld a, $81
 	ld [wPikachuMood], a
 	ld c, 80
@@ -2301,7 +2301,7 @@ ItemUsePPRestore:
 	cp MAX_ETHER
 	jr z, .fullyRestorePP
 	ld a, [hl] ; move PP
-	and %00111111 ; lower 6 bit bits store current PP
+	and PP_MASK
 	cp b ; does current PP equal max PP?
 	ret z ; if so, return
 	add 10 ; increase current PP by 10
@@ -2314,17 +2314,17 @@ ItemUsePPRestore:
 	ld b, a
 .storeNewAmount
 	ld a, [hl] ; move PP
-	and %11000000 ; PP Up counter bits
+	and PP_UP_MASK
 	add b
 	ld [hl], a
 	ret
 
 .fullyRestorePP
 	ld a, [hl] ; move PP
-; Note that this code has a bug. It doesn't mask out the upper two bits, which
-; are used to count how many PP Ups have been used on the move. So, Max Ethers
-; and Max Elixirs will not be detected as having no effect on a move with full
-; PP if the move has had any PP Ups used on it.
+; Bug: This code doesn't mask out the upper two bits, which are used to count
+; how many PP Ups have been used on the move.
+; So, Max Ethers and Max Elixirs will not be detected as having no effect on
+; a move with full PP if the move has had any PP Ups used on it.
 	cp b ; does current PP equal max PP?
 	ret z
 	jr .storeNewAmount
@@ -2507,7 +2507,7 @@ ItemUseTMHM:
 	jr nz, .notTeachingThunderboltOrThunderToPikachu
 .teachingThunderboltOrThunderToPlayerPikachu
 	ld a, $5
-	ld [wd49c], a
+	ld [wd49b], a
 	ld a, $85
 	ld [wPikachuMood], a
 .notTeachingThunderboltOrThunderToPikachu
@@ -2684,7 +2684,7 @@ RestoreBonusPP:
 	jr nz, .nextMove
 .skipMenuItemIDCheck
 	ld a, [hl]
-	and %11000000 ; have any PP Ups been used?
+	and PP_UP_MASK
 	call nz, AddBonusPP ; if so, add bonus PP
 .nextMove
 	inc hl
@@ -2791,10 +2791,10 @@ GetMaxPP:
 .addPPOffset
 	add hl, bc
 	ld a, [hl] ; a = current PP
-	and %11000000 ; get PP Up count
+	and PP_UP_MASK
 	pop bc
 	or b ; place normal max PP in 6 lower bits of a
-	assert wMoveData + MOVE_PP + 1 == wPPUpCountAndMaxPP
+	ASSERT wMoveData + MOVE_PP + 1 == wPPUpCountAndMaxPP
 	ld h, d
 	ld l, e
 	inc hl ; hl = wPPUpCountAndMaxPP
@@ -2803,7 +2803,7 @@ GetMaxPP:
 	ld [wUsingPPUp], a
 	call AddBonusPP ; add bonus PP from PP Ups
 	ld a, [hl]
-	and %00111111 ; mask out the PP Up count
+	and PP_MASK
 	ld [wMaxPP], a ; store max PP
 	ret
 

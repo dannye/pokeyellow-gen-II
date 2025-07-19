@@ -149,7 +149,7 @@ SECTION "OAM Buffer", WRAM0
 ; buffer for OAM data. Copied to OAM by DMA
 wShadowOAM::
 ; wShadowOAMSprite00 - wShadowOAMSprite39
-FOR n, NUM_SPRITE_OAM_STRUCTS
+FOR n, OAM_COUNT
 wShadowOAMSprite{02d:n}:: sprite_oam_struct wShadowOAMSprite{02d:n}
 ENDR
 wShadowOAMEnd::
@@ -158,12 +158,26 @@ wShadowOAMEnd::
 SECTION "Tilemap", WRAM0
 
 ; buffer for tiles that are visible on screen (20 columns by 18 rows)
-wTileMap:: ds SCREEN_WIDTH * SCREEN_HEIGHT
+wTileMap:: ds SCREEN_AREA
 
+; This union spans 480 bytes.
 UNION
 ; buffer for temporarily saving and restoring current screen's tiles
 ; (e.g. if menus are drawn on top)
-wTileMapBackup:: ds SCREEN_WIDTH * SCREEN_HEIGHT
+wTileMapBackup:: ds SCREEN_AREA
+
+NEXTU
+; buffer for the blocks surrounding the player (6 columns by 5 rows of 4x4-tile blocks)
+wSurroundingTiles:: ds SURROUNDING_WIDTH * SURROUNDING_HEIGHT
+
+NEXTU
+; buffer for temporarily saving and restoring shadow OAM
+wShadowOAMBackup::
+; wShadowOAMBackupSprite00 - wShadowOAMBackupSprite39
+FOR n, OAM_COUNT
+wShadowOAMBackupSprite{02d:n}:: sprite_oam_struct wShadowOAMBackupSprite{02d:n}
+ENDR
+wShadowOAMBackupEnd::
 
 NEXTU
 ; list of indexes to patch with SERIAL_NO_DATA_BYTE after transfer
@@ -250,8 +264,6 @@ wYellowIntroAnimatedObjectStructPointer:: db
 wSurfingMinigameDataEnd::
 ENDU
 
-	ds 80
-
 
 SECTION "Overworld Map", WRAM0
 
@@ -304,7 +316,7 @@ wHandshakeFrameDelay:: db
 wPrinterSerialFrameDelay:: db
 wPrinterSendByteOffset:: dw
 wPrinterDataSize:: dw
-wPrinterTileBuffer:: ds SCREEN_HEIGHT * SCREEN_WIDTH
+wPrinterTileBuffer:: ds SCREEN_AREA
 wPrinterStatusIndicator:: dw
 wcae2:: db
 wPrinterSettingsTempCopy:: db
@@ -477,7 +489,7 @@ wNPCMovementScriptBank:: db
 
 ; This union spans 180 bytes.
 UNION
-wVermilionDockTileMapBuffer:: ds 5 * BG_MAP_WIDTH + SCREEN_WIDTH
+wVermilionDockTileMapBuffer:: ds 5 * TILEMAP_WIDTH + SCREEN_WIDTH
 wVermilionDockTileMapBufferEnd::
 
 NEXTU
@@ -645,10 +657,13 @@ wEXPBarCurEXP::       ds 3
 wEXPBarNeededEXP::    ds 3
 wEXPBarKeepFullFlag:: ds 1
 
-; number of hits by enemy in attacks like Double Slap, etc.
-wEnemyNumHits:: ; db
+UNION
 ; the amount of damage accumulated by the enemy while biding
 wEnemyBideAccumulatedDamage:: dw
+NEXTU
+; number of hits by enemy in attacks like Double Slap, etc.
+wEnemyNumHits:: db
+ENDU
 
 	ds 8
 wMiscBattleDataEnd::
@@ -1086,7 +1101,7 @@ UNION
 wSerialOtherGameboyRandomNumberListBlock:: ds $11
 NEXTU
 ; second buffer for temporarily saving and restoring current screen's tiles (e.g. if menus are drawn on top)
-wTileMapBackup2:: ds SCREEN_WIDTH * SCREEN_HEIGHT
+wTileMapBackup2:: ds SCREEN_AREA
 ENDU
 
 ; This union spans 30 bytes.
@@ -1925,7 +1940,7 @@ wOptions:: db
 
 wObtainedBadges:: flag_array NUM_BADGES
 
-	ds 1
+wUnusedObtainedBadges:: db
 
 wLetterPrintingDelayFlags:: db
 
@@ -1981,22 +1996,22 @@ wObjectDataPointerTemp:: dw
 ; the tile shown outside the boundaries of the map
 wMapBackgroundTile:: db
 
-; number of warps in current map (up to 32)
+; number of warps in current map (up to MAX_WARP_EVENTS)
 wNumberOfWarps:: db
 
 ; current map warp entries
-wWarpEntries:: ds 32 * 4 ; Y, X, warp ID, map ID
+wWarpEntries:: ds MAX_WARP_EVENTS * 4 ; Y, X, warp ID, map ID
 
 ; if $ff, the player's coordinates are not updated when entering the map
 wDestinationWarpID:: db
 
 wPikachuOverworldStateFlags:: db
 wPikachuSpawnState:: db
+wd431:: db
 wd432:: db
 wd433:: db
 wd434:: db
 wd435:: db
-wd436:: db
 wPikachuFollowCommandBufferSize:: db
 wPikachuFollowCommandBuffer:: ds 16
 
@@ -2050,12 +2065,12 @@ ENDU
 
 wPikachuHappiness:: db
 wPikachuMood:: db
+wd471:: db
 wd472:: db
-wd473:: db
 	ds 1
-wd475:: db
+wd474:: db
 	ds 4
-wd47a:: db
+wd479:: db
 	ds 24
 wd492:: db
 	ds 1
@@ -2065,17 +2080,17 @@ wPrinterSettings:: db
 wUnknownSerialFlag_d499:: db
 wPrinterConnectionOpen:: db
 wPrinterOpcode:: db
-wd49c:: db
+wd49b:: db
 
 	ds 19
 
-; number of signs in the current map (up to 16)
+; number of signs in the current map (up to MAX_BG_EVENTS)
 wNumSigns:: db
 
-wSignCoords:: ds 16 * 2 ; Y, X
-wSignTextIDs:: ds 16
+wSignCoords:: ds MAX_BG_EVENTS * 2 ; Y, X
+wSignTextIDs:: ds MAX_BG_EVENTS
 
-; number of sprites on the current map (up to 16)
+; number of sprites on the current map (up to MAX_OBJECT_EVENTS)
 wNumSprites:: db
 
 ; these two variables track the X and Y offset in blocks from the last special warp used
@@ -2083,8 +2098,8 @@ wNumSprites:: db
 wYOffsetSinceLastSpecialWarp:: db
 wXOffsetSinceLastSpecialWarp:: db
 
-wMapSpriteData:: ds 16 * 2 ; movement byte 2, text ID
-wMapSpriteExtraData:: ds 16 * 2 ; trainer class/item ID, trainer set ID
+wMapSpriteData:: ds MAX_OBJECT_EVENTS * 2 ; movement byte 2, text ID
+wMapSpriteExtraData:: ds MAX_OBJECT_EVENTS * 2 ; trainer class/item ID, trainer set ID
 
 ; map height in 2x2 meta-tiles
 wCurrentMapHeight2:: db
@@ -2401,7 +2416,7 @@ wSerialEnemyDataBlock:: ; ds $1a8
 
 	ds 9
 
-wEnemyPartyCount:: ds 1
+wEnemyPartyCount:: db
 wEnemyPartySpecies:: ds PARTY_LENGTH + 1
 
 wEnemyMons::
@@ -2491,15 +2506,15 @@ wBoxMonNicksEnd::
 wBoxDataEnd::
 
 
-SECTION "GBC Palette Data", WRAM0
+SECTION "CGB Palette Data", WRAM0
 
-wGBCBasePalPointers:: ds NUM_ACTIVE_PALS * 2
-wGBCPal:: ds PALETTE_SIZE
+wCGBBasePalPointers:: ds NUM_ACTIVE_PALS * 2
+wCGBPal:: ds PAL_SIZE
 wLastBGP:: db
 wLastOBP0:: db
 wLastOBP1:: db
-wdef5:: db
-wBGPPalsBuffer:: ds (NUM_ACTIVE_PALS + 1) * PALETTE_SIZE
+wdef4:: db
+wBGPPalsBuffer:: ds (NUM_ACTIVE_PALS + 1) * PAL_SIZE
 
 
 SECTION "Stack", WRAM0

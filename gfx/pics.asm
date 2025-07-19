@@ -253,7 +253,7 @@ FossilAerodactylPic::  INCBIN "gfx/pokemon/front/fossilaerodactyl.pic"
 GhostPic::             INCBIN "gfx/battle/ghost.pic"
 
 
-SECTION "Pics 6", ROMX
+SECTION "Trainer Pics", ROMX
 
 YoungsterPic::     INCBIN "gfx/trainers/youngster.pic"
 BugCatcherPic::    INCBIN "gfx/trainers/bugcatcher.pic"
