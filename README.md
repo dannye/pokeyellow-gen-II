@@ -1,3 +1,11 @@
+# pokeyellow-gen-2-gfx
+
+Pokémon Yellow with 2nd Gen. Graphical Enhancements.
+
+**Note:** This repository used to be called **pokeyellow-gen-II**.
+
+Original README follows...
+
 # Pokémon Yellow [![Build Status][ci-badge]][ci]
 
 This is a disassembly of Pokémon Yellow.
